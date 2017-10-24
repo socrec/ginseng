@@ -18,6 +18,7 @@ class Auth
     /* Permissions */
     //User
     const PERM_MANAGE_USER = 'manageUser';
+    const PERM_ADD_USER = 'addUser';
     const PERM_VIEW_USER = 'viewUser';
     const PERM_EDIT_USER = 'editUser';
     const PERM_DELETE_USER = 'deleteUser';
