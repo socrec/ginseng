@@ -1,6 +1,7 @@
 <?php
 
 /* @var $this \yii\web\View */
+
 /* @var $content string */
 
 use backend\assets\AppAsset;
@@ -9,6 +10,7 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use common\widgets\Alert;
+use common\constant\Auth;
 
 AppAsset::register($this);
 ?>
@@ -20,7 +22,7 @@ AppAsset::register($this);
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?= Html::csrfMetaTags() ?>
-    <title><?= Html::encode($this->title) ?></title>
+    <title><?= Html::encode($this->title ? $this->title : Yii::t('app', 'Panax Vietnamensis')) ?></title>
     <?php $this->head() ?>
 </head>
 <body>
@@ -29,7 +31,7 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => 'My Company',
+        'brandLabel' => Yii::t('app', 'Panax Vietnamensis'),
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
@@ -41,6 +43,27 @@ AppAsset::register($this);
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
+        if (Yii::$app->user->can(Auth::PERM_VIEW_GINSENG)) {
+            $menuItems[] = [
+                'label' => Yii::t('app', 'Panax'),
+                'items' => [
+                    ['label' => Yii::t('app', 'List'), 'url' => ['/panax/index']],
+                    '<li class="divider"></li>',
+                    //check if have approve draft permission or not
+                    Yii::$app->user->can(Auth::PERM_APPROVE_DRAFT) ?
+                        ['label' => Yii::t('app', 'Pending Drafts'), 'url' => ['/draft/index']]
+                        : ['label' => ''],
+                ],
+            ];
+        }
+
+        if (Yii::$app->user->can(Auth::PERM_VIEW_USER)) {
+            $menuItems[] = [
+                'label' => Yii::t('app', 'User'),
+                'url' => ['user/index']
+            ];
+        }
+
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
@@ -68,9 +91,9 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+        <p class="pull-left">&copy; <?= Yii::t('app', 'Panax Vietnamensis') ?> <?= date('Y') ?></p>
 
-        <p class="pull-right"><?= Yii::powered() ?></p>
+        <p class="pull-right">Develop by <a target="_blank" href="https://dangnhsite.wordpress.com/">DangNH</a></p>
     </div>
 </footer>
 
