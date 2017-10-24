@@ -4,17 +4,17 @@ namespace backend\controllers;
 
 use common\constant\Auth;
 use Yii;
-use common\models\DraftGinseng;
-use common\models\DraftGinsengSearch;
+use common\models\User;
+use common\models\UserSearch;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * DraftController implements the CRUD actions for DraftGinseng model.
+ * UserController implements the CRUD actions for User model.
  */
-class DraftController extends Controller
+class UserController extends Controller
 {
     /**
      * @inheritdoc
@@ -28,12 +28,22 @@ class DraftController extends Controller
                     [
                         'actions' => ['index', 'view'],
                         'allow' => true,
-                        'roles' => [Auth::PERM_APPROVE_DRAFT]
+                        'roles' => [Auth::PERM_VIEW_USER]
+                    ],
+                    [
+                        'actions' => ['update'],
+                        'allow' => true,
+                        'roles' => [Auth::PERM_EDIT_USER],
+                    ],
+                    [
+                        'actions' => ['create'],
+                        'allow' => true,
+                        'roles' => [Auth::PERM_ADD_USER],
                     ],
                     [
                         'actions' => ['delete'],
                         'allow' => true,
-                        'roles' => [Auth::PERM_DELETE_GINSENG],
+                        'roles' => [Auth::PERM_DELETE_USER],
                     ],
                 ],
             ],
@@ -47,12 +57,12 @@ class DraftController extends Controller
     }
 
     /**
-     * Lists all DraftGinseng models.
+     * Lists all User models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new DraftGinsengSearch();
+        $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -62,7 +72,7 @@ class DraftController extends Controller
     }
 
     /**
-     * Displays a single DraftGinseng model.
+     * Displays a single User model.
      * @param integer $id
      * @return mixed
      */
@@ -74,7 +84,44 @@ class DraftController extends Controller
     }
 
     /**
-     * Deletes an existing DraftGinseng model.
+     * Creates a new User model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionCreate()
+    {
+        $model = new User();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->render('create', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+    /**
+     * Updates an existing User model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+    /**
+     * Deletes an existing User model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -87,15 +134,15 @@ class DraftController extends Controller
     }
 
     /**
-     * Finds the DraftGinseng model based on its primary key value.
+     * Finds the User model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return DraftGinseng the loaded model
+     * @return User the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = DraftGinseng::findOne($id)) !== null) {
+        if (($model = User::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

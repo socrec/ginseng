@@ -22,6 +22,11 @@ return [
             ],
         ],
     ],
+    'modules' => [
+        'gridview' =>  [
+            'class' => '\kartik\grid\Module'
+        ]
+    ],
     'language' => 'vi-VN',
     'sourceLanguage' => 'en-US',
 ];
