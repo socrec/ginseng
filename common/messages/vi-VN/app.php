@@ -24,4 +24,6 @@ return [
     'Created By' => 'Tạo Bởi',
     'Updated By' => 'Sửa Bởi',
     'Role' => 'Vai Trò',
+    'Password 1st' => 'Password',
+    'Password 2nd' => 'Nhập Lại Password',
 ];

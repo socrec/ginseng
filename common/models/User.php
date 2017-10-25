@@ -25,6 +25,9 @@ class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
+    public $role = '';
+    public $password_1st = '';
+    public $password_2nd = '';
 
 
     /**
@@ -51,6 +54,10 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
+            [['username', 'password_1st', 'password_2nd'], 'required'],
+            [['password', 'password_1st', 'password_2nd', 'username', 'role'], 'string', 'max' => 60],
+            ['username', 'unique'],
+            ['password_2nd', 'compare', 'compareAttribute' => 'password_1st'],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
         ];
@@ -164,6 +171,14 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * Dummy function to trick the Yii core
+     */
+    public function getPassword()
+    {
+        return null;
+    }
+
+    /**
      * Generates "remember me" authentication key
      */
     public function generateAuthKey()
@@ -196,6 +211,9 @@ class User extends ActiveRecord implements IdentityInterface
             'id' => 'ID',
             'status' => Yii::t('app', 'Status'),
             'username' => Yii::t('app', 'User'),
+            'role' => Yii::t('app', 'Role'),
+            'password_1st' => Yii::t('app', 'Password 1st'),
+            'password_2nd' => Yii::t('app', 'Password 2nd'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
             'deleted_at' => Yii::t('app', 'Deleted At'),
