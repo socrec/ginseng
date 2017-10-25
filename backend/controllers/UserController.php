@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\constant\App;
 use common\constant\Auth;
 use Yii;
 use common\models\User;
@@ -91,9 +92,17 @@ class UserController extends Controller
     public function actionCreate()
     {
         $model = new User();
+        $model->scenario = App::SCENARIO_CREATE;
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            dd($model);
+            $model->password_hash = Yii::$app->security->generatePasswordHash($model->password_1st);
+            $model->generateAuthKey();
+            $model->save();
+
+            //assign role
+            $auth = Yii::$app->authManager;
+            $role = $auth->getRole($model->role);
+            $auth->assign($role, $model->id);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
@@ -111,8 +120,10 @@ class UserController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->scenario = App::SCENARIO_UPDATE;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            dd($model);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [

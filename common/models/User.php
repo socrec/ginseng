@@ -1,6 +1,7 @@
 <?php
 namespace common\models;
 
+use common\constant\App;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
@@ -54,9 +55,11 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['username', 'password_1st', 'password_2nd'], 'required'],
-            [['password', 'password_1st', 'password_2nd', 'username', 'role'], 'string', 'max' => 60],
+            ['email', 'required'],
+            [['username', 'password_1st', 'password_2nd'], 'required', 'on' => App::SCENARIO_CREATE],
+            [['password', 'password_1st', 'password_2nd', 'username', 'role', 'auth_key'], 'string', 'max' => 200],
             ['username', 'unique'],
+            ['email', 'email'],
             ['password_2nd', 'compare', 'compareAttribute' => 'password_1st'],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],

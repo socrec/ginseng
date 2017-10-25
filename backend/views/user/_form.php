@@ -13,15 +13,18 @@ use common\constant\Auth;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?php if($model->isNewRecord) { ?>
-    <?= $form->field($model, 'username')->textInput() ?>
+    <?= $form->field($model, 'email')->textInput() ?>
     <?= $form->field($model, 'role')->dropDownList([
             Auth::ROLE_CONTRIBUTOR => ucfirst(Auth::ROLE_CONTRIBUTOR),
             Auth::ROLE_ADMIN => ucfirst(Auth::ROLE_ADMIN)
         ]) ?>
     <?= $form->field($model, 'password_1st')->passwordInput() ?>
     <?= $form->field($model, 'password_2nd')->passwordInput() ?>
+    <?php if($model->isNewRecord) { ?>
+        <?= $form->field($model, 'username')->textInput() ?>
     <?php } else { ?>
+        <?= $form->field($model, 'password_1st')->passwordInput() ?>
+        <?= $form->field($model, 'password_2nd')->passwordInput() ?>
     <?php } ?>
 
 

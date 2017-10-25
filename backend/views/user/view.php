@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'username',
             'email:email',
-            [                      // the owner name of the model
+            [
                 'label' => Yii::t('app', 'Role'),
                 'value' => array_shift(Yii::$app->authManager->getRolesByUser($model->id))->name
             ],
