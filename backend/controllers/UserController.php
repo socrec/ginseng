@@ -120,10 +120,12 @@ class UserController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $model->scenario = App::SCENARIO_UPDATE;
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            dd($model);
+            if ($model->password_1st) {
+                $model->password_hash = Yii::$app->security->generatePasswordHash($model->password_1st);
+            }
+            $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
@@ -140,7 +142,7 @@ class UserController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $this->findModel($id)->softDelete();
 
         return $this->redirect(['index']);
     }
@@ -154,7 +156,11 @@ class UserController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = User::findOne($id)) !== null) {
+        $model = User::findOne([
+            'id' => $id,
+            'is_deleted' => null
+        ]);
+        if ($model !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

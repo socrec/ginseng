@@ -7,6 +7,7 @@ use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
  * User model
@@ -46,6 +47,12 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             TimestampBehavior::className(),
+            'softDeleteBehavior' => [
+                'class' => SoftDeleteBehavior::className(),
+                'softDeleteAttributeValues' => [
+                    'is_deleted' => true
+                ],
+            ],
         ];
     }
 
@@ -61,6 +68,7 @@ class User extends ActiveRecord implements IdentityInterface
             ['username', 'unique'],
             ['email', 'email'],
             ['password_2nd', 'compare', 'compareAttribute' => 'password_1st'],
+            ['password_1st', 'compare', 'compareAttribute' => 'password_2nd'],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
         ];

@@ -58,6 +58,7 @@ class UserSearch extends User
         }
 
         $query->where(['!=', 'id', 1]);
+        $query->andWhere(['is_deleted' => null]);
 
         // grid filtering conditions
         $query->andFilterWhere([
