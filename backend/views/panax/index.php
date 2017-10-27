@@ -7,7 +7,7 @@ use yii\widgets\Pjax;
 /* @var $searchModel common\models\GinsengSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Ginsengs';
+$this->title = Yii::t('app', 'Panax');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="ginseng-index">
@@ -16,24 +16,22 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Ginseng', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Create'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 <?php Pjax::begin(); ?>    <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
             'code',
             'origin',
             'status',
             'planted_by',
-            // 'planted_at',
+             'planted_at',
             // 'weight',
-            // 'garden_no',
-            // 'line_no',
-            // 'parent_code',
+             'garden_no',
+             'line_no',
+             'parent_id',
             // 'how_to_use:ntext',
             // 'notice:ntext',
             // 'created_at',
@@ -41,7 +39,6 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'deleted_at',
             // 'created_by',
             // 'updated_by',
-
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

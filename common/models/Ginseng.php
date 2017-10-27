@@ -9,6 +9,9 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
+use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
  * This is the model class for table "ginseng".
@@ -22,7 +25,7 @@ use Yii;
  * @property string $weight
  * @property string $garden_no
  * @property string $line_no
- * @property string $parent_code
+ * @property string $parent_id
  * @property string $how_to_use
  * @property string $notice
  * @property string $created_at
@@ -33,6 +36,23 @@ use Yii;
  */
 class Ginseng extends \yii\db\ActiveRecord
 {
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
+            BlameableBehavior::className(),
+            'softDeleteBehavior' => [
+                'class' => SoftDeleteBehavior::className(),
+                'softDeleteAttributeValues' => [
+                    'is_deleted' => true
+                ],
+            ],
+        ];
+    }
+
     /**
      * @inheritdoc
      */
@@ -50,9 +70,9 @@ class Ginseng extends \yii\db\ActiveRecord
             [['code'], 'required'],
             [['status', 'created_by', 'updated_by'], 'integer'],
             [['planted_at', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
-            [['weight'], 'number'],
+            [['weight', 'parent_id'], 'number'],
             [['how_to_use', 'notice'], 'string'],
-            [['code', 'parent_code'], 'string', 'max' => 200],
+            [['code'], 'string', 'max' => 200],
             [['origin', 'planted_by'], 'string', 'max' => 250],
             [['garden_no', 'line_no'], 'string', 'max' => 5],
             [['code'], 'unique'],
@@ -67,21 +87,21 @@ class Ginseng extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'code' => 'Code',
-            'origin' => 'Origin',
-            'status' => 'Status',
-            'planted_by' => 'Planted By',
-            'planted_at' => 'Planted At',
-            'weight' => 'Weight',
-            'garden_no' => 'Garden No',
-            'line_no' => 'Line No',
-            'parent_code' => 'Parent Code',
-            'how_to_use' => 'How To Use',
-            'notice' => 'Notice',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'deleted_at' => 'Deleted At',
-            'created_by' => 'Created By',
-            'updated_by' => 'Updated By',
+            'origin' => Yii::t('app', 'Origin'),
+            'status' => Yii::t('app', 'Status'),
+            'planted_by' => Yii::t('app', 'Planted By'),
+            'planted_at' => Yii::t('app', 'Planted At'),
+            'weight' => Yii::t('app', 'Weight'),
+            'garden_no' => Yii::t('app', 'Garden No'),
+            'line_no' => Yii::t('app', 'Line No'),
+            'parent_id' => Yii::t('app', 'Parent'),
+            'how_to_use' => Yii::t('app', 'How To Use'),
+            'notice' => Yii::t('app', 'Notice'),
+            'created_at' => Yii::t('app', 'Created At'),
+            'updated_at' => Yii::t('app', 'Updated At'),
+            'deleted_at' => Yii::t('app', 'Deleted At'),
+            'created_by' => Yii::t('app', 'Created By'),
+            'updated_by' => Yii::t('app', 'Updated By'),
         ];
     }
 }

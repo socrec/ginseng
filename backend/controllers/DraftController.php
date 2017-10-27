@@ -95,7 +95,11 @@ class DraftController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = DraftGinseng::findOne($id)) !== null) {
+        $model = DraftGinseng::findOne([
+            'id' => $id,
+            'is_deleted' => null
+        ]);
+        if ($model !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

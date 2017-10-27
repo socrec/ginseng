@@ -6,10 +6,12 @@ use common\constant\Auth;
 use Yii;
 use common\models\Ginseng;
 use common\models\GinsengSearch;
+use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * PanaxController implements the CRUD actions for Ginseng model.
@@ -26,7 +28,7 @@ class PanaxController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'view'],
+                        'actions' => ['index', 'view', 'panax-list'],
                         'allow' => true,
                         'roles' => [Auth::PERM_VIEW_GINSENG]
                     ],
@@ -69,6 +71,25 @@ class PanaxController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+    }
+
+    public function actionPanaxList($q = null, $id = null) {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $out = ['results' => ['id' => '', 'text' => '']];
+        if (!is_null($q)) {
+            $query = new Query();
+            $query->select('id, code AS text')
+                ->from('ginseng')
+                ->where(['like', 'code', $q])
+                ->limit(20);
+            $command = $query->createCommand();
+            $data = $command->queryAll();
+            $out['results'] = array_values($data);
+        }
+        elseif ($id > 0) {
+            $out['results'] = ['id' => $id, 'text' => Ginseng::findOne($id)->code];
+        }
+        return $out;
     }
 
     /**
@@ -142,7 +163,11 @@ class PanaxController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Ginseng::findOne($id)) !== null) {
+        $model = Ginseng::findOne([
+            'id' => $id,
+            'is_deleted' => null
+        ]);
+        if ($model !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

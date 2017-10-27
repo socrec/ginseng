@@ -17,6 +17,7 @@ return [
                     'fileMap' => [
                         'app' => 'app.php',
                         'app/error' => 'error.php',
+                        'app/panax' => 'panax.php',
                     ],
                 ],
             ],

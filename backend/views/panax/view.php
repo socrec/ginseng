@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'weight',
             'garden_no',
             'line_no',
-            'parent_code',
+            'parent_id',
             'how_to_use:ntext',
             'notice:ntext',
             'created_at',

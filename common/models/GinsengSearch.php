@@ -19,7 +19,7 @@ class GinsengSearch extends Ginseng
     {
         return [
             [['id', 'status', 'created_by', 'updated_by'], 'integer'],
-            [['code', 'origin', 'planted_by', 'planted_at', 'garden_no', 'line_no', 'parent_code', 'how_to_use', 'notice', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
+            [['code', 'origin', 'planted_by', 'planted_at', 'garden_no', 'line_no', 'parent_id', 'how_to_use', 'notice', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['weight'], 'number'],
         ];
     }
@@ -45,6 +45,7 @@ class GinsengSearch extends Ginseng
         $query = Ginseng::find();
 
         // add conditions that should always apply here
+        $query->where(['is_deleted' => null]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -76,7 +77,7 @@ class GinsengSearch extends Ginseng
             ->andFilterWhere(['like', 'planted_by', $this->planted_by])
             ->andFilterWhere(['like', 'garden_no', $this->garden_no])
             ->andFilterWhere(['like', 'line_no', $this->line_no])
-            ->andFilterWhere(['like', 'parent_code', $this->parent_code])
+            ->andFilterWhere(['like', 'parent_id', $this->parent_id])
             ->andFilterWhere(['like', 'how_to_use', $this->how_to_use])
             ->andFilterWhere(['like', 'notice', $this->notice]);
 

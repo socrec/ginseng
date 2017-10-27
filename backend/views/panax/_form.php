@@ -2,6 +2,11 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use common\constant\App;
+use kartik\select2\Select2;
+use yii\web\JsExpression;
+use yii\helpers\Url;
+use kartik\date\DatePicker;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Ginseng */
@@ -12,40 +17,63 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'code')->textInput(['maxlength' => true]) ?>
+    <div class="row">
+        <div class="col-md-6">
+            <?= $form->field($model, 'origin')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'origin')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'status')->dropDownList([
+                App::PANAX_STATUS_AVAILABLE => Yii::t('app/panax', 'Available'),
+                App::PANAX_STATUS_SOLD => Yii::t('app/panax', 'Sold'),
+                App::PANAX_STATUS_DEAD => Yii::t('app/panax', 'Dead'),
+            ]) ?>
 
-    <?= $form->field($model, 'status')->textInput() ?>
+            <?= $form->field($model, 'planted_by')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'planted_by')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'planted_at')->widget(DatePicker::className(), [
+                'options' => ['placeholder' => Yii::t('app', 'Select date...')],
+                'pluginOptions' => [
+                    'format' => 'yyyy-mm-dd',
+                    'todayHighlight' => true
+                ]
+            ]) ?>
 
-    <?= $form->field($model, 'planted_at')->textInput() ?>
+            <?= $form->field($model, 'how_to_use')->textarea(['rows' => 6]) ?>
+        </div>
+        <div class="col-md-6">
+            <?= $form->field($model, 'parent_id')->widget(Select2::className(), [
+                'options' => ['placeholder' => Yii::t('app', 'Search by Code...')],
+                'pluginOptions' => [
+                    'allowClear' => true,
+                    'minimumInputLength' => 2,
+                    'ajax' => [
+                        'url' => Url::to(['panax/panax-list']),
+                        'dataType' => 'json',
+                        'data' => new JsExpression('function(params) { return {q:params.term}; }')
+                    ],
+                    'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+//                    'templateResult' => new JsExpression('function(city) { return city.text; }'),
+//                    'templateSelection' => new JsExpression('function (city) { return city.text; }'),
+                ],
+            ]) ?>
 
-    <?= $form->field($model, 'weight')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'weight')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'garden_no')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'garden_no')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'line_no')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'line_no')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'parent_code')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'notice')->textarea(['rows' => 6]) ?>
+        </div>
+    </div>
 
-    <?= $form->field($model, 'how_to_use')->textarea(['rows' => 6]) ?>
-
-    <?= $form->field($model, 'notice')->textarea(['rows' => 6]) ?>
-
-    <?= $form->field($model, 'created_at')->textInput() ?>
-
-    <?= $form->field($model, 'updated_at')->textInput() ?>
-
-    <?= $form->field($model, 'deleted_at')->textInput() ?>
-
-    <?= $form->field($model, 'created_by')->textInput() ?>
-
-    <?= $form->field($model, 'updated_by')->textInput() ?>
+    <div class="row">
+        <div class="section col-md-12">
+            <div class="title"><?= Yii::t('app', 'More Info') ?></div>
+        </div>
+    </div>
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

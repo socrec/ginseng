@@ -33,7 +33,7 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'line_no') ?>
 
-    <?php // echo $form->field($model, 'parent_code') ?>
+    <?php // echo $form->field($model, 'parent_id') ?>
 
     <?php // echo $form->field($model, 'how_to_use') ?>
 

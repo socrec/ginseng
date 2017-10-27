@@ -118,3 +118,9 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+
+div.row .section .title {
+    font-size: 20px;
+    border-top: solid 2px #e4e4e4;
+    padding: 10px 0px;
+}

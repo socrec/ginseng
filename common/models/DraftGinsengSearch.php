@@ -45,6 +45,7 @@ class DraftGinsengSearch extends DraftGinseng
         $query = DraftGinseng::find();
 
         // add conditions that should always apply here
+        $query->where(['is_deleted' => null]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
