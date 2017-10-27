@@ -38,4 +38,11 @@ return [
     'Search by Code...' => 'Tìm kiếm theo mã Code...',
     'Select date...' => 'Chọn ngày',
     'More Info' => 'Thông Tin Mở Rộng',
+    'Year' => 'Năm',
+    'Date Raise' => 'Thời Gian Mọc',
+    'Date Sleep' => 'Thời Gian Ngủ',
+    'Fertilize Date' => 'Ngày Bón Phân',
+    'Fertilize Brand' => 'Loại Phân',
+    'Fertilize Amount' => 'Lượng Phân/Nồng Độ',
+    'Add Row' => 'Thêm',
 ];

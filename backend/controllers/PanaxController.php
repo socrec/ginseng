@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use common\constant\Auth;
+use common\models\YearlyDetail;
 use Yii;
 use common\models\Ginseng;
 use common\models\GinsengSearch;
@@ -112,13 +113,12 @@ class PanaxController extends Controller
     public function actionCreate()
     {
         $model = new Ginseng();
+        $yearlyModel = new YearlyDetail();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+            return $this->render('create', compact('model', 'yearlyModel'));
         }
     }
 

@@ -70,6 +70,51 @@ use kartik\date\DatePicker;
         <div class="section col-md-12">
             <div class="title"><?= Yii::t('app', 'More Info') ?></div>
         </div>
+        <div class="multiple-rows">
+            <div class="single-row">
+                <div class="col-md-6">
+                    <?= $form->field($yearlyModel, 'year')->widget(Select2::className(), [
+                        'options' => ['placeholder' => Yii::t('app', 'Year')],
+                        'data' => App::$years,
+                        'pluginOptions' => [
+                            'allowClear' => true,
+                        ],
+                    ]) ?>
+
+                    <?= $form->field($yearlyModel, 'date_raise')->widget(DatePicker::className(), [
+                        'options' => ['placeholder' => Yii::t('app', 'Select date...')],
+                        'pluginOptions' => [
+                            'format' => 'yyyy-mm-dd',
+                            'todayHighlight' => true
+                        ]
+                    ]) ?>
+
+                    <?= $form->field($yearlyModel, 'date_sleep')->widget(DatePicker::className(), [
+                        'options' => ['placeholder' => Yii::t('app', 'Select date...')],
+                        'pluginOptions' => [
+                            'format' => 'yyyy-mm-dd',
+                            'todayHighlight' => true
+                        ]
+                    ]) ?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($yearlyModel, 'fertilize_date')->widget(DatePicker::className(), [
+                        'options' => ['placeholder' => Yii::t('app', 'Select date...')],
+                        'pluginOptions' => [
+                            'format' => 'yyyy-mm-dd',
+                            'todayHighlight' => true
+                        ]
+                    ]) ?>
+
+                    <?= $form->field($yearlyModel, 'fertilize_brand')->textInput() ?>
+
+                    <?= $form->field($yearlyModel, 'fertilize_amount')->textInput() ?>
+                </div>
+                <div class="col-md-12 text-center">
+                    <a onclick="addRow($(this))" title="<?= Yii::t('app', 'Add Row') ?>" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span></a>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="form-group">
