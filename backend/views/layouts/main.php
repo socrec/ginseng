@@ -101,3 +101,7 @@ AppAsset::register($this);
 </body>
 </html>
 <?php $this->endPage() ?>
+<!-- For inject js scripts -->
+<?php if (isset($this->blocks['scripts'])) : ?>
+    <?= $this->blocks['scripts'] ?>
+<?php endif; ?>

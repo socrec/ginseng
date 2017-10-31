@@ -70,18 +70,15 @@ use kartik\date\DatePicker;
         <div class="section col-md-12">
             <div class="title"><?= Yii::t('app', 'More Info') ?></div>
         </div>
-        <div class="multiple-rows">
-            <div class="single-row">
+        <div class="multiple-rows parent">
+            <div class="child">
                 <div class="col-md-6">
-                    <?= $form->field($yearlyModel, 'year')->widget(Select2::className(), [
+                    <?= $form->field($yearlyModel, 'year[]')->widget(Select2::className(), [
                         'options' => ['placeholder' => Yii::t('app', 'Year')],
                         'data' => App::$years,
-                        'pluginOptions' => [
-                            'allowClear' => true,
-                        ],
                     ]) ?>
 
-                    <?= $form->field($yearlyModel, 'date_raise')->widget(DatePicker::className(), [
+                    <?= $form->field($yearlyModel, 'date_raise[]')->widget(DatePicker::className(), [
                         'options' => ['placeholder' => Yii::t('app', 'Select date...')],
                         'pluginOptions' => [
                             'format' => 'yyyy-mm-dd',
@@ -89,7 +86,7 @@ use kartik\date\DatePicker;
                         ]
                     ]) ?>
 
-                    <?= $form->field($yearlyModel, 'date_sleep')->widget(DatePicker::className(), [
+                    <?= $form->field($yearlyModel, 'date_sleep[]')->widget(DatePicker::className(), [
                         'options' => ['placeholder' => Yii::t('app', 'Select date...')],
                         'pluginOptions' => [
                             'format' => 'yyyy-mm-dd',
@@ -98,7 +95,7 @@ use kartik\date\DatePicker;
                     ]) ?>
                 </div>
                 <div class="col-md-6">
-                    <?= $form->field($yearlyModel, 'fertilize_date')->widget(DatePicker::className(), [
+                    <?= $form->field($yearlyModel, 'fertilize_date[]')->widget(DatePicker::className(), [
                         'options' => ['placeholder' => Yii::t('app', 'Select date...')],
                         'pluginOptions' => [
                             'format' => 'yyyy-mm-dd',
@@ -106,9 +103,9 @@ use kartik\date\DatePicker;
                         ]
                     ]) ?>
 
-                    <?= $form->field($yearlyModel, 'fertilize_brand')->textInput() ?>
+                    <?= $form->field($yearlyModel, 'fertilize_brand[]')->textInput() ?>
 
-                    <?= $form->field($yearlyModel, 'fertilize_amount')->textInput() ?>
+                    <?= $form->field($yearlyModel, 'fertilize_amount[]')->textInput() ?>
                 </div>
                 <div class="col-md-12 text-center">
                     <a onclick="addRow($(this))" title="<?= Yii::t('app', 'Add Row') ?>" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span></a>
@@ -120,7 +117,48 @@ use kartik\date\DatePicker;
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
-
     <?php ActiveForm::end(); ?>
-
 </div>
+<?php $this->beginBlock('scripts') ?>
+<script>
+    function addRow(button) {
+        var parent = button.parents('.multiple-rows.parent')[0],
+            row = '<div class="child">' +
+                    '<div class="col-md-6">' +
+                        <?= json_encode($form->field($yearlyModel, 'year[]')->dropDownList(App::$years)->__toString()) ?> +
+                        <?= json_encode($form->field($yearlyModel, 'date_raise[]')->widget(DatePicker::className(), [
+                            'options' => ['placeholder' => Yii::t('app', 'Select date...')],
+                            'pluginOptions' => [
+                                'format' => 'yyyy-mm-dd',
+                                'todayHighlight' => true
+                            ]
+                        ])->__toString()) ?> +
+                        <?= json_encode($form->field($yearlyModel, 'date_sleep[]')->widget(DatePicker::className(), [
+                            'options' => ['placeholder' => Yii::t('app', 'Select date...')],
+                            'pluginOptions' => [
+                                'format' => 'yyyy-mm-dd',
+                                'todayHighlight' => true
+                            ]
+                        ])->__toString()) ?> +
+                    '</div>' +
+                    '<div class="col-md-6">' +
+                        <?= json_encode($form->field($yearlyModel, 'fertilize_date[]')->widget(DatePicker::className(), [
+                            'options' => ['placeholder' => Yii::t('app', 'Select date...')],
+                            'pluginOptions' => [
+                                'format' => 'yyyy-mm-dd',
+                                'todayHighlight' => true
+                            ]
+                        ])->__toString()) ?> +
+                        <?= json_encode($form->field($yearlyModel, 'fertilize_brand[]')->textInput()->__toString()) ?> +
+                        <?= json_encode($form->field($yearlyModel, 'fertilize_amount[]')->textInput()->__toString()) ?> +
+                    '</div>' +
+                    '<div class="col-md-12 text-center">' +
+                        '<a onclick="removeRow($(this))" title="<?= Yii::t('app', 'Delete') ?>" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>' +
+                    '</div>' +
+                '</div>';
+        $(parent).append(row);
+//        $(parent).find('select').last().select2();
+        console.log($(parent).find('select').last());
+    }
+</script>
+<?php $this->endBlock() ?>
