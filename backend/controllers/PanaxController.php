@@ -2,7 +2,9 @@
 
 namespace backend\controllers;
 
+use common\constant\App;
 use common\constant\Auth;
+use common\models\Image;
 use common\models\YearlyDetail;
 use Yii;
 use common\models\Ginseng;
@@ -13,6 +15,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\Response;
+use yii\web\UploadedFile;
 
 /**
  * PanaxController implements the CRUD actions for Ginseng model.
@@ -115,7 +118,38 @@ class PanaxController extends Controller
         $model = new Ginseng();
         $yearlyModel = new YearlyDetail();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $model->code = 'PV' . strtoupper(uniqid());
+            $model->save();
+
+            //upload Image
+            $model->imageFiles = UploadedFile::getInstances($model, 'imageFiles');
+            foreach ($model->imageFiles as $file) {
+                $path = 'uploads/panax/'. uniqid() . '_' . $file->baseName . '.' . $file->extension;
+                $file->saveAs($path);
+
+                //save to db
+                $image = new Image();
+                $image->path = $path;
+                $image->object_id = $model->id;
+                $image->object_type = App::OBJECT_PANAX;
+                $image->save();
+            }
+
+            $data = Yii::$app->request->post('YearlyDetail');
+            if (count($data['year']) && $data['year'][0]) {
+                foreach ($data['year'] as $index => $year) {
+                    $yearlyModel = new YearlyDetail();
+                    $yearlyModel->year = $year;
+                    $yearlyModel->ginseng_id = $model->id;
+                    $yearlyModel->date_raise = $data['date_raise'][$index];
+                    $yearlyModel->date_sleep = $data['date_sleep'][$index];
+                    $yearlyModel->fertilize_date = $data['fertilize_date'][$index];
+                    $yearlyModel->fertilize_brand = $data['fertilize_brand'][$index];
+                    $yearlyModel->fertilize_amount = $data['fertilize_amount'][$index];
+                    $yearlyModel->save();
+                }
+            }
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', compact('model', 'yearlyModel'));
@@ -123,8 +157,8 @@ class PanaxController extends Controller
     }
 
     /**
-     * Updates an existing Ginseng model.
-     * If update is successful, the browser will be redirected to the 'view' page.
+     * Updates an existing Ginseng model.     * If update is successful, the browser will be redirected to the 'view' page.
+
      * @param integer $id
      * @return mixed
      */
@@ -149,7 +183,7 @@ class PanaxController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $this->findModel($id)->softDelete();
 
         return $this->redirect(['index']);
     }

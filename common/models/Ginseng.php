@@ -8,6 +8,7 @@
 
 namespace common\models;
 
+use common\constant\App;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -36,6 +37,8 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  */
 class Ginseng extends \yii\db\ActiveRecord
 {
+    public $imageFiles;
+
     /**
      * @inheritdoc
      */
@@ -67,7 +70,7 @@ class Ginseng extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['code'], 'required'],
+            [['weight', 'origin', 'planted_by', 'garden_no', 'line_no'], 'required'],
             [['status', 'created_by', 'updated_by'], 'integer'],
             [['planted_at', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['weight', 'parent_id'], 'number'],
@@ -76,7 +79,20 @@ class Ginseng extends \yii\db\ActiveRecord
             [['origin', 'planted_by'], 'string', 'max' => 250],
             [['garden_no', 'line_no'], 'string', 'max' => 5],
             [['code'], 'unique'],
+            [['imageFiles'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxFiles' => 10],
         ];
+    }
+
+    public function upload()
+    {
+        if ($this->validate()) {
+            foreach ($this->imageFiles as $file) {
+                $file->saveAs('uploads/panax/' . $file->baseName . '.' . $file->extension);
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -91,17 +107,44 @@ class Ginseng extends \yii\db\ActiveRecord
             'status' => Yii::t('app', 'Status'),
             'planted_by' => Yii::t('app', 'Planted By'),
             'planted_at' => Yii::t('app', 'Planted At'),
-            'weight' => Yii::t('app', 'Weight'),
+            'weight' => Yii::t('app', 'Weight (g)'),
             'garden_no' => Yii::t('app', 'Garden No'),
             'line_no' => Yii::t('app', 'Line No'),
             'parent_id' => Yii::t('app', 'Parent'),
             'how_to_use' => Yii::t('app', 'How To Use'),
             'notice' => Yii::t('app', 'Notice'),
+            'imageFiles' => Yii::t('app', 'Image'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
             'deleted_at' => Yii::t('app', 'Deleted At'),
             'created_by' => Yii::t('app', 'Created By'),
             'updated_by' => Yii::t('app', 'Updated By'),
         ];
+    }
+
+    public function getYearlyDetails()
+    {
+        return $this->hasMany(YearlyDetail::className(), ['ginseng_id' => 'id']);
+    }
+
+    public function getImages()
+    {
+        return $this->hasMany(Image::className(), ['object_id' => 'id'])->where(['object_type' => App::OBJECT_PANAX]);
+    }
+
+    public function getParent()
+    {
+        return $this->hasOne(Ginseng::className(), ['id' => 'parent_id']);
+    }
+
+    public function getStatusText()
+    {
+        if ($this->status == App::PANAX_STATUS_AVAILABLE) {
+            return Yii::t('app/panax', 'Available');
+        } elseif ($this->status == App::PANAX_STATUS_SOLD) {
+            return Yii::t('app/panax', 'Sold');
+        } else {
+            return Yii::t('app/panax', 'Dead');
+        }
     }
 }

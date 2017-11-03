@@ -3,6 +3,8 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use common\constant\App;
+
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\GinsengSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -18,20 +20,30 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a(Yii::t('app', 'Create'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-<?php Pjax::begin(); ?>    <?= GridView::widget([
+    <?php Pjax::begin(); ?>    <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'code',
             'origin',
-            'status',
+            [
+                'attribute' => 'status',
+                'value' => function ($model) {
+                    return $model->statusText;
+                }
+            ],
             'planted_by',
-             'planted_at',
-            // 'weight',
-             'garden_no',
-             'line_no',
-             'parent_id',
+            'planted_at',
+            'weight',
+            'garden_no',
+            'line_no',
+            [
+                'attribute' => 'parent_id',
+                'value' => function ($model) {
+                    return $model->parent ? $model->parent->code : null;
+                }
+            ],
             // 'how_to_use:ntext',
             // 'notice:ntext',
             // 'created_at',
@@ -42,4 +54,5 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
-<?php Pjax::end(); ?></div>
+    <?php Pjax::end(); ?>
+</div>

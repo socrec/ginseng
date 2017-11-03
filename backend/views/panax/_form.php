@@ -15,10 +15,12 @@ use kartik\date\DatePicker;
 
 <div class="ginseng-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
     <div class="row">
         <div class="col-md-6">
+            <?= $form->field($model, 'imageFiles[]')->fileInput(['multiple' => true, 'accept' => 'image/*']) ?>
+
             <?= $form->field($model, 'origin')->textInput(['maxlength' => true]) ?>
 
             <?= $form->field($model, 'status')->dropDownList([
@@ -51,8 +53,6 @@ use kartik\date\DatePicker;
                         'data' => new JsExpression('function(params) { return {q:params.term}; }')
                     ],
                     'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
-//                    'templateResult' => new JsExpression('function(city) { return city.text; }'),
-//                    'templateSelection' => new JsExpression('function (city) { return city.text; }'),
                 ],
             ]) ?>
 
@@ -74,7 +74,6 @@ use kartik\date\DatePicker;
             <div class="child">
                 <div class="col-md-6">
                     <?= $form->field($yearlyModel, 'year[]')->widget(Select2::className(), [
-                        'options' => ['placeholder' => Yii::t('app', 'Year')],
                         'data' => App::$years,
                     ]) ?>
 
@@ -122,7 +121,7 @@ use kartik\date\DatePicker;
 <?php $this->beginBlock('scripts') ?>
 <script>
     function addRow(button) {
-        var parent = button.parents('.multiple-rows.parent')[0],
+        var parent = button.parents('.multiple-rows.parent').first(),
             row = '<div class="child">' +
                     '<div class="col-md-6">' +
                         <?= json_encode($form->field($yearlyModel, 'year[]')->dropDownList(App::$years)->__toString()) ?> +
@@ -157,8 +156,16 @@ use kartik\date\DatePicker;
                     '</div>' +
                 '</div>';
         $(parent).append(row);
-//        $(parent).find('select').last().select2();
-        console.log($(parent).find('select').last());
-    }
+        //trigger
+        $(parent).find('select').last().select2();
+        $(parent).find('[name^="YearlyDetail[date_raise]"]').last().kvDatepicker({});
+        $(parent).find('[name^="YearlyDetail[date_sleep]"]').last().kvDatepicker({});
+        $(parent).find('[name^="YearlyDetail[fertilize_date]"]').last().kvDatepicker({});
+    };
+
+    function removeRow(button) {
+        var child = button.parent().parent();
+        child.remove();
+    };
 </script>
 <?php $this->endBlock() ?>
