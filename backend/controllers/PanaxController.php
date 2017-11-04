@@ -148,6 +148,20 @@ class PanaxController extends Controller
                     $yearlyModel->fertilize_brand = $data['fertilize_brand'][$index];
                     $yearlyModel->fertilize_amount = $data['fertilize_amount'][$index];
                     $yearlyModel->save();
+
+                    //upload Image
+                    $yearlyModel->imageFiles = UploadedFile::getInstances($yearlyModel, 'imageFiles');
+                    foreach ($yearlyModel->imageFiles as $file) {
+                        $path = 'uploads/panax/'. uniqid() . '_' . $file->baseName . '.' . $file->extension;
+                        $file->saveAs($path);
+
+                        //save to db
+                        $image = new Image();
+                        $image->path = $path;
+                        $image->object_id = $yearlyModel->id;
+                        $image->object_type = App::OBJECT_YEAR;
+                        $image->save();
+                    }
                 }
             }
             return $this->redirect(['view', 'id' => $model->id]);

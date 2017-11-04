@@ -5,6 +5,7 @@ namespace common\models;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
@@ -26,13 +27,19 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  */
 class YearlyDetail extends \yii\db\ActiveRecord
 {
+    public $imageFiles;
+
     /**
      * @inheritdoc
      */
     public function behaviors()
     {
         return [
-            TimestampBehavior::className(),
+            [
+                'class' => TimestampBehavior::className(),
+                // if you're using datetime instead of UNIX timestamp:
+                'value' => new Expression('NOW()'),
+            ],
             BlameableBehavior::className(),
             'softDeleteBehavior' => [
                 'class' => SoftDeleteBehavior::className(),
@@ -61,6 +68,7 @@ class YearlyDetail extends \yii\db\ActiveRecord
             [['ginseng_id', 'year', 'created_by', 'updated_by'], 'integer'],
             [['date_raise', 'date_sleep', 'fertilize_date', 'fertilize_brand', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['fertilize_amount'], 'string', 'max' => 250],
+            [['imageFiles'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxFiles' => 10],
         ];
     }
 
@@ -78,6 +86,7 @@ class YearlyDetail extends \yii\db\ActiveRecord
             'fertilize_date' => Yii::t('app', 'Fertilize Date'),
             'fertilize_brand' => Yii::t('app', 'Fertilize Brand'),
             'fertilize_amount' => Yii::t('app', 'Fertilize Amount'),
+            'imageFiles' => Yii::t('app', 'Image'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
             'deleted_at' => Yii::t('app', 'Deleted At'),

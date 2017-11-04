@@ -12,6 +12,8 @@ use common\constant\App;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
@@ -45,7 +47,11 @@ class Ginseng extends \yii\db\ActiveRecord
     public function behaviors()
     {
         return [
-            TimestampBehavior::className(),
+            [
+                'class' => TimestampBehavior::className(),
+                // if you're using datetime instead of UNIX timestamp:
+                'value' => new Expression('NOW()'),
+            ],
             BlameableBehavior::className(),
             'softDeleteBehavior' => [
                 'class' => SoftDeleteBehavior::className(),

@@ -32,7 +32,11 @@ class DraftYear extends \yii\db\ActiveRecord
     public function behaviors()
     {
         return [
-            TimestampBehavior::className(),
+            [
+                'class' => TimestampBehavior::className(),
+                // if you're using datetime instead of UNIX timestamp:
+                'value' => new Expression('NOW()'),
+            ],
             BlameableBehavior::className(),
             'softDeleteBehavior' => [
                 'class' => SoftDeleteBehavior::className(),

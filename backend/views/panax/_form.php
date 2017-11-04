@@ -19,8 +19,6 @@ use kartik\date\DatePicker;
 
     <div class="row">
         <div class="col-md-6">
-            <?= $form->field($model, 'imageFiles[]')->fileInput(['multiple' => true, 'accept' => 'image/*']) ?>
-
             <?= $form->field($model, 'origin')->textInput(['maxlength' => true]) ?>
 
             <?= $form->field($model, 'status')->dropDownList([
@@ -40,6 +38,8 @@ use kartik\date\DatePicker;
             ]) ?>
 
             <?= $form->field($model, 'how_to_use')->textarea(['rows' => 6]) ?>
+
+            <?= $form->field($model, 'imageFiles[]')->fileInput(['multiple' => true, 'accept' => 'image/*']) ?>
         </div>
         <div class="col-md-6">
             <?= $form->field($model, 'parent_id')->widget(Select2::className(), [

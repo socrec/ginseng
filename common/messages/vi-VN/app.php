@@ -29,7 +29,7 @@ return [
     'Origin' => 'Xuất Xứ',
     'Planted By' => 'Người Trồng',
     'Planted At' => 'Ngày Trồng',
-    'Weight' => 'Trọng Lượng',
+    'Weight (g)' => 'Trọng Lượng (g)',
     'Garden No' => 'Vườn Số',
     'Line No' => 'Luống Số',
     'Parent' => 'Cây Mẹ',
@@ -45,4 +45,5 @@ return [
     'Fertilize Brand' => 'Loại Phân',
     'Fertilize Amount' => 'Lượng Phân/Nồng Độ',
     'Add Row' => 'Thêm',
+    'Image' => 'Ảnh',
 ];
