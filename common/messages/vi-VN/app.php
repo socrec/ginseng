@@ -46,4 +46,5 @@ return [
     'Fertilize Amount' => 'Lượng Phân/Nồng Độ',
     'Add Row' => 'Thêm',
     'Image' => 'Ảnh',
+    'Replace all Image' => 'Thay thế toàn bộ Ảnh',
 ];

@@ -85,6 +85,7 @@ class PanaxController extends Controller
             $query->select('id, code AS text')
                 ->from('ginseng')
                 ->where(['like', 'code', $q])
+                ->andWhere(['is_deleted' => null])
                 ->limit(20);
             $command = $query->createCommand();
             $data = $command->queryAll();
@@ -179,12 +180,14 @@ class PanaxController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $yearlyModel = new YearlyDetail();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'yearlyModel' => $yearlyModel,
             ]);
         }
     }

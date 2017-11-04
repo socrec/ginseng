@@ -39,7 +39,7 @@ use kartik\date\DatePicker;
 
             <?= $form->field($model, 'how_to_use')->textarea(['rows' => 6]) ?>
 
-            <?= $form->field($model, 'imageFiles[]')->fileInput(['multiple' => true, 'accept' => 'image/*']) ?>
+            <?= $form->field($model, 'imageFiles[]')->label((isset($model->id) ? Yii::t('app', 'Replace all Image') : Yii::t('app', 'Image')))->fileInput(['multiple' => true, 'accept' => 'image/*']) ?>
         </div>
         <div class="col-md-6">
             <?= $form->field($model, 'parent_id')->widget(Select2::className(), [
@@ -71,45 +71,90 @@ use kartik\date\DatePicker;
             <div class="title"><?= Yii::t('app', 'More Info') ?></div>
         </div>
         <div class="multiple-rows parent">
-            <div class="child">
-                <div class="col-md-6">
-                    <?= $form->field($yearlyModel, 'year[]')->widget(Select2::className(), [
-                        'data' => App::$years,
-                    ]) ?>
+            <?php if (!$model->id): ?>
+                <div class="child">
+                    <div class="col-md-6">
+                        <?= $form->field($yearlyModel, 'year[]')->dropDownList(App::$years) ?>
 
-                    <?= $form->field($yearlyModel, 'date_raise[]')->widget(DatePicker::className(), [
-                        'options' => ['placeholder' => Yii::t('app', 'Select date...')],
-                        'pluginOptions' => [
-                            'format' => 'yyyy-mm-dd',
-                            'todayHighlight' => true
-                        ]
-                    ]) ?>
+                        <?= $form->field($yearlyModel, 'date_raise[]')->widget(DatePicker::className(), [
+                            'options' => ['placeholder' => Yii::t('app', 'Select date...')],
+                            'pluginOptions' => [
+                                'format' => 'yyyy-mm-dd',
+                                'todayHighlight' => true
+                            ]
+                        ]) ?>
 
-                    <?= $form->field($yearlyModel, 'date_sleep[]')->widget(DatePicker::className(), [
-                        'options' => ['placeholder' => Yii::t('app', 'Select date...')],
-                        'pluginOptions' => [
-                            'format' => 'yyyy-mm-dd',
-                            'todayHighlight' => true
-                        ]
-                    ]) ?>
+                        <?= $form->field($yearlyModel, 'date_sleep[]')->widget(DatePicker::className(), [
+                            'options' => ['placeholder' => Yii::t('app', 'Select date...')],
+                            'pluginOptions' => [
+                                'format' => 'yyyy-mm-dd',
+                                'todayHighlight' => true
+                            ]
+                        ]) ?>
+                    </div>
+                    <div class="col-md-6">
+                        <?= $form->field($yearlyModel, 'fertilize_date[]')->widget(DatePicker::className(), [
+                            'options' => ['placeholder' => Yii::t('app', 'Select date...')],
+                            'pluginOptions' => [
+                                'format' => 'yyyy-mm-dd',
+                                'todayHighlight' => true
+                            ]
+                        ]) ?>
+
+                        <?= $form->field($yearlyModel, 'fertilize_brand[]')->textInput() ?>
+
+                        <?= $form->field($yearlyModel, 'fertilize_amount[]')->textInput() ?>
+                    </div>
+                    <div class="col-md-12 text-center">
+                        <a onclick="addRow($(this))" title="<?= Yii::t('app', 'Add Row') ?>" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span></a>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <?= $form->field($yearlyModel, 'fertilize_date[]')->widget(DatePicker::className(), [
-                        'options' => ['placeholder' => Yii::t('app', 'Select date...')],
-                        'pluginOptions' => [
-                            'format' => 'yyyy-mm-dd',
-                            'todayHighlight' => true
-                        ]
-                    ]) ?>
+            <?php else: ?>
+                <?php foreach ($model->yearlyDetails as $index => $detail): ?>
+                    <div class="child">
+                        <div class="col-md-6">
+                            <?= $form->field($detail, 'year')->dropDownList(App::$years) ?>
 
-                    <?= $form->field($yearlyModel, 'fertilize_brand[]')->textInput() ?>
+                            <?= $form->field($detail, 'date_raise[]')->widget(DatePicker::className(), [
+                                'options' => ['placeholder' => Yii::t('app', 'Select date...')],
+                                'pluginOptions' => [
+                                    'format' => 'yyyy-mm-dd',
+                                    'todayHighlight' => true
+                                ],
+                                //'value' => $detail->date_raise
+                            ]) ?>
 
-                    <?= $form->field($yearlyModel, 'fertilize_amount[]')->textInput() ?>
-                </div>
-                <div class="col-md-12 text-center">
-                    <a onclick="addRow($(this))" title="<?= Yii::t('app', 'Add Row') ?>" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span></a>
-                </div>
-            </div>
+                            <?= $form->field($detail, 'date_sleep')->widget(DatePicker::className(), [
+                                'options' => ['placeholder' => Yii::t('app', 'Select date...')],
+                                'pluginOptions' => [
+                                    'format' => 'yyyy-mm-dd',
+                                    'todayHighlight' => true
+                                ]
+                            ]) ?>
+                        </div>
+                        <div class="col-md-6">
+                            <?= $form->field($detail, 'fertilize_date')->widget(DatePicker::className(), [
+                                'options' => ['placeholder' => Yii::t('app', 'Select date...')],
+                                'pluginOptions' => [
+                                    'format' => 'yyyy-mm-dd',
+                                    'todayHighlight' => true
+                                ]
+                            ]) ?>
+
+                            <?= $form->field($detail, 'fertilize_brand')->textInput() ?>
+
+                            <?= $form->field($detail, 'fertilize_amount')->textInput() ?>
+                        </div>
+                        <div class="col-md-12 text-center">
+                            <?php if ($index == 0): ?>
+                                <a onclick="addRow($(this))" title="<?= Yii::t('app', 'Add Row') ?>" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span></a>
+                            <?php else: ?>
+                                <a onclick="removeRow($(this))" title="<?= Yii::t('app', 'Delete') ?>" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </div>
 
