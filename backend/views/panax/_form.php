@@ -115,13 +115,12 @@ use kartik\date\DatePicker;
                         <div class="col-md-6">
                             <?= $form->field($detail, 'year')->dropDownList(App::$years) ?>
 
-                            <?= $form->field($detail, 'date_raise[]')->widget(DatePicker::className(), [
+                            <?= $form->field($detail, 'date_raise')->widget(DatePicker::className(), [
                                 'options' => ['placeholder' => Yii::t('app', 'Select date...')],
                                 'pluginOptions' => [
                                     'format' => 'yyyy-mm-dd',
                                     'todayHighlight' => true
-                                ],
-                                //'value' => $detail->date_raise
+                                ]
                             ]) ?>
 
                             <?= $form->field($detail, 'date_sleep')->widget(DatePicker::className(), [
