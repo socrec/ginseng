@@ -67,6 +67,10 @@ use kartik\date\DatePicker;
     </div>
 
     <div class="row">
+        
+    </div>
+
+    <div class="row">
         <div class="section col-md-12">
             <div class="title"><?= Yii::t('app', 'More Info') ?></div>
         </div>
@@ -201,7 +205,7 @@ use kartik\date\DatePicker;
                 '</div>';
         $(parent).append(row);
         //trigger
-        $(parent).find('select').last().select2();
+//        $(parent).find('select').last().select2();
         $(parent).find('[name^="YearlyDetail[date_raise]"]').last().kvDatepicker({});
         $(parent).find('[name^="YearlyDetail[date_sleep]"]').last().kvDatepicker({});
         $(parent).find('[name^="YearlyDetail[fertilize_date]"]').last().kvDatepicker({});
