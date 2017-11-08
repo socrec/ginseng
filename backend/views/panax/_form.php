@@ -7,6 +7,7 @@ use kartik\select2\Select2;
 use yii\web\JsExpression;
 use yii\helpers\Url;
 use kartik\date\DatePicker;
+use unclead\multipleinput\MultipleInput;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Ginseng */
@@ -67,7 +68,19 @@ use kartik\date\DatePicker;
     </div>
 
     <div class="row">
-
+        <div class="section col-md-12">
+            <div class="title"><?= Yii::t('app', 'More Info') ?></div>
+        </div>
+        <div class="multiple-rows parent">
+            <?= $form->field($model, 'years')->widget(MultipleInput::className(), [
+                'max' => 4,
+                'columns' => [
+                    [
+                        'name' =>
+                    ]
+                ]
+            ]) ?>
+        </div>
     </div>
 
     <div class="row">

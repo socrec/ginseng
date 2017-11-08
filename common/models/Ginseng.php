@@ -40,6 +40,16 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
 class Ginseng extends \yii\db\ActiveRecord
 {
     public $imageFiles;
+    public $years;
+
+    public function init()
+    {
+        parent::init();
+
+        if ($this->id && count($this->getYearlyDetails())) {
+            $this->years = $this->getYearlyDetails();
+        }
+    }
 
     /**
      * @inheritdoc
