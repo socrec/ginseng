@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model common\models\Ginseng */
 
 $this->title = $model->code;
-$this->params['breadcrumbs'][] = ['label' => 'Ginsengs', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Panax'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="ginseng-view">
@@ -15,8 +15,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => 'Are you sure you want to delete this item?',
@@ -103,6 +103,12 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'fertilize_amount',
                             ],
                         ]) ?>
+                        <div class="sub-section">
+                            <div class="title">
+                                <?= Yii::t('app', 'Sicks') ?>
+
+                            </div>
+                        </div>
                     </div>
                 <?php endforeach; ?>
             </div>

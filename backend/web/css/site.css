@@ -124,3 +124,8 @@ div.row .section .title {
     border-top: solid 2px #e4e4e4;
     padding: 10px 0px;
 }
+
+div.sub-section {
+    font-size: 18px;
+    padding: 0 8px;
+}

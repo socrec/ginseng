@@ -48,4 +48,5 @@ return [
     'Image' => 'Ảnh',
     'Replace all Image' => 'Thay thế toàn bộ Ảnh',
     'Select year...' => 'Chọn năm',
+    'Sicks' => 'Bệnh',
 ];
