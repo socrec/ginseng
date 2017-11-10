@@ -98,13 +98,9 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'year',
                                 'date_raise',
                                 'date_sleep',
-                                'date_raise',
                                 'fertilize_date',
                                 'fertilize_brand',
                                 'fertilize_amount',
-//                                [
-//                                    'label' => Yii::t('app', '')
-//                                ],
                             ],
                         ]) ?>
                     </div>

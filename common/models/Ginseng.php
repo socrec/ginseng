@@ -14,6 +14,7 @@ use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\db\Expression;
+use yii\validators\RequiredValidator;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
@@ -41,15 +42,12 @@ class Ginseng extends \yii\db\ActiveRecord
 {
     public $imageFiles;
     public $years;
-
-    public function init()
-    {
-        parent::init();
-
-        if ($this->id && count($this->getYearlyDetails())) {
-            $this->years = $this->getYearlyDetails();
-        }
-    }
+    public $year;
+    public $date_raise;
+    public $date_sleep;
+    public $fertilize_date;
+    public $fertilize_brand;
+    public $fertilize_amount;
 
     /**
      * @inheritdoc
@@ -97,6 +95,25 @@ class Ginseng extends \yii\db\ActiveRecord
             [['code'], 'unique'],
             [['imageFiles'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxFiles' => 10],
         ];
+    }
+
+    /**
+     * Validation for `$years`
+     * @param $attribute
+     */
+    public function validateYears($attribute)
+    {
+        $requiredValidator = new RequiredValidator();
+
+        foreach($this->$attribute as $index => $row) {
+            dd($row);
+            $error = null;
+            $requiredValidator->validate($row['priority'], $error);
+            if (!empty($error)) {
+                $key = $attribute . '[' . $index . '][priority]';
+                $this->addError($key, $error);
+            }
+        }
     }
 
     public function upload()

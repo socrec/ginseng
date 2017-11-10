@@ -77,7 +77,8 @@ class PanaxController extends Controller
         ]);
     }
 
-    public function actionPanaxList($q = null, $id = null) {
+    public function actionPanaxList($q = null, $id = null)
+    {
         Yii::$app->response->format = Response::FORMAT_JSON;
         $out = ['results' => ['id' => '', 'text' => '']];
         if (!is_null($q)) {
@@ -90,8 +91,7 @@ class PanaxController extends Controller
             $command = $query->createCommand();
             $data = $command->queryAll();
             $out['results'] = array_values($data);
-        }
-        elseif ($id > 0) {
+        } elseif ($id > 0) {
             $out['results'] = ['id' => $id, 'text' => Ginseng::findOne($id)->code];
         }
         return $out;
@@ -126,7 +126,7 @@ class PanaxController extends Controller
             //upload Image
             $model->imageFiles = UploadedFile::getInstances($model, 'imageFiles');
             foreach ($model->imageFiles as $file) {
-                $path = 'uploads/panax/'. uniqid() . '_' . $file->baseName . '.' . $file->extension;
+                $path = 'uploads/panax/' . uniqid() . '_' . $file->baseName . '.' . $file->extension;
                 $file->saveAs($path);
 
                 //save to db
@@ -137,32 +137,18 @@ class PanaxController extends Controller
                 $image->save();
             }
 
-            $data = Yii::$app->request->post('YearlyDetail');
-            if (count($data['year']) && $data['year'][0]) {
-                foreach ($data['year'] as $index => $year) {
+            $data = Yii::$app->request->post('Ginseng');
+            if (count($data['years']) && $data['years'][0]) {
+                foreach ($data['years'] as $index => $year) {
                     $yearlyModel = new YearlyDetail();
-                    $yearlyModel->year = $year;
+                    $yearlyModel->year = $year['year'];
                     $yearlyModel->ginseng_id = $model->id;
-                    $yearlyModel->date_raise = $data['date_raise'][$index];
-                    $yearlyModel->date_sleep = $data['date_sleep'][$index];
-                    $yearlyModel->fertilize_date = $data['fertilize_date'][$index];
-                    $yearlyModel->fertilize_brand = $data['fertilize_brand'][$index];
-                    $yearlyModel->fertilize_amount = $data['fertilize_amount'][$index];
+                    $yearlyModel->date_raise = $year['date_raise'];
+                    $yearlyModel->date_sleep = $year['date_sleep'];
+                    $yearlyModel->fertilize_date = $year['fertilize_date'];
+                    $yearlyModel->fertilize_brand = $year['fertilize_brand'];
+                    $yearlyModel->fertilize_amount = $year['fertilize_amount'];
                     $yearlyModel->save();
-
-                    //upload Image
-                    $yearlyModel->imageFiles = UploadedFile::getInstances($yearlyModel, 'imageFiles');
-                    foreach ($yearlyModel->imageFiles as $file) {
-                        $path = 'uploads/panax/'. uniqid() . '_' . $file->baseName . '.' . $file->extension;
-                        $file->saveAs($path);
-
-                        //save to db
-                        $image = new Image();
-                        $image->path = $path;
-                        $image->object_id = $yearlyModel->id;
-                        $image->object_type = App::OBJECT_YEAR;
-                        $image->save();
-                    }
                 }
             }
             return $this->redirect(['view', 'id' => $model->id]);
@@ -173,7 +159,6 @@ class PanaxController extends Controller
 
     /**
      * Updates an existing Ginseng model.     * If update is successful, the browser will be redirected to the 'view' page.
-
      * @param integer $id
      * @return mixed
      */
@@ -181,8 +166,55 @@ class PanaxController extends Controller
     {
         $model = $this->findModel($id);
         $yearlyModel = new YearlyDetail();
+        if ($model->id && $model->getYearlyDetails()->count()) {
+            $model->years = $model->getYearlyDetails()->all();
+        }
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            dd(Yii::$app->request->post());
+            $model->save();
+
+            //upload Image
+            $model->imageFiles = UploadedFile::getInstances($model, 'imageFiles');
+            if (count($model->imageFiles)) {
+                foreach ($model->imageFiles as $file) {
+                    //delete all old images
+                    $oldImages = Image::find()->where(['object_type' => App::OBJECT_PANAX, 'object_id' => $model->id])->all();
+                    foreach ($oldImages as $oldImage) {
+                        $oldImage->delete();
+                    }
+
+                    //upload new files
+                    $path = 'uploads/panax/' . uniqid() . '_' . $file->baseName . '.' . $file->extension;
+                    $file->saveAs($path);
+
+                    //save to db
+                    $image = new Image();
+                    $image->path = $path;
+                    $image->object_id = $model->id;
+                    $image->object_type = App::OBJECT_PANAX;
+                    $image->save();
+                }
+            }
+
+            $data = Yii::$app->request->post('Ginseng');
+            if (count($data['years']) && $data['years'][0]) {
+                foreach ($data['years'] as $index => $year) {
+                    if ($year['id']) {
+                        $yearlyModel = YearlyDetail::findOne($year['id']);
+                    } else {
+                        $yearlyModel = new YearlyDetail();
+                    }
+                    $yearlyModel->year = $year['year'];
+                    $yearlyModel->ginseng_id = $model->id;
+                    $yearlyModel->date_raise = $year['date_raise'];
+                    $yearlyModel->date_sleep = $year['date_sleep'];
+                    $yearlyModel->fertilize_date = $year['fertilize_date'];
+                    $yearlyModel->fertilize_brand = $year['fertilize_brand'];
+                    $yearlyModel->fertilize_amount = $year['fertilize_amount'];
+                    $yearlyModel->save();
+                }
+            }
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
