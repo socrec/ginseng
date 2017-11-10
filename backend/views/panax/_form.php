@@ -47,7 +47,6 @@ use unclead\multipleinput\MultipleInput;
                 'options' => ['placeholder' => Yii::t('app', 'Search by Code...')],
                 'pluginOptions' => [
                     'allowClear' => true,
-                    'minimumInputLength' => 2,
                     'ajax' => [
                         'url' => Url::to(['panax/panax-list']),
                         'dataType' => 'json',
@@ -79,7 +78,8 @@ use unclead\multipleinput\MultipleInput;
                         'type'  => Select2::className(),
                         'title' => $yearlyModel->getAttributeLabel('year'),
                         'options' => [
-                            'data' => App::$years
+                            'data' => App::$years,
+                            'options' => ['placeholder' => Yii::t('app', 'Select year...')],
                         ]
                     ],
                     [

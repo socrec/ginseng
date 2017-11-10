@@ -138,16 +138,16 @@ class PanaxController extends Controller
             }
 
             $data = Yii::$app->request->post('Ginseng');
-            if (count($data['years']) && $data['years'][0]) {
-                foreach ($data['years'] as $index => $year) {
+            if (count($data['years']) && $data['years'][0]['year']) {
+                foreach ($data['years'] as $index => $yearlyDetail) {
                     $yearlyModel = new YearlyDetail();
-                    $yearlyModel->year = $year['year'];
-                    $yearlyModel->ginseng_id = $model->id;
-                    $yearlyModel->date_raise = $year['date_raise'];
-                    $yearlyModel->date_sleep = $year['date_sleep'];
-                    $yearlyModel->fertilize_date = $year['fertilize_date'];
-                    $yearlyModel->fertilize_brand = $year['fertilize_brand'];
-                    $yearlyModel->fertilize_amount = $year['fertilize_amount'];
+                    $yearlyModel->year = $yearlyDetail['year'];
+                    $yearlyModel->ginseng_id = $yearlyDetail->id;
+                    $yearlyModel->date_raise = $yearlyDetail['date_raise'];
+                    $yearlyModel->date_sleep = $yearlyDetail['date_sleep'];
+                    $yearlyModel->fertilize_date = $yearlyDetail['fertilize_date'];
+                    $yearlyModel->fertilize_brand = $yearlyDetail['fertilize_brand'];
+                    $yearlyModel->fertilize_amount = $yearlyDetail['fertilize_amount'];
                     $yearlyModel->save();
                 }
             }
@@ -171,7 +171,6 @@ class PanaxController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            dd(Yii::$app->request->post());
             $model->save();
 
             //upload Image
@@ -198,21 +197,40 @@ class PanaxController extends Controller
             }
 
             $data = Yii::$app->request->post('Ginseng');
+
+            //update yearly details
+            $oldIds = [];
+            $newIds = [];
+            //get old Ids array
+            if (count($model->yearlyDetails)) {
+                foreach ($model->yearlyDetails as $yearlyDetail ) {
+                    $oldIds[] = $yearlyDetail->id;
+                }
+            }
             if (count($data['years']) && $data['years'][0]) {
-                foreach ($data['years'] as $index => $year) {
-                    if ($year['id']) {
-                        $yearlyModel = YearlyDetail::findOne($year['id']);
+                foreach ($data['years'] as $index => $yearlyDetail) {
+                    if ($yearlyDetail['id']) {
+                        $yearlyModel = YearlyDetail::findOne($yearlyDetail['id']);
+                        $newIds[] = $yearlyModel->id;
                     } else {
                         $yearlyModel = new YearlyDetail();
                     }
-                    $yearlyModel->year = $year['year'];
+                    $yearlyModel->year = $yearlyDetail['year'];
                     $yearlyModel->ginseng_id = $model->id;
-                    $yearlyModel->date_raise = $year['date_raise'];
-                    $yearlyModel->date_sleep = $year['date_sleep'];
-                    $yearlyModel->fertilize_date = $year['fertilize_date'];
-                    $yearlyModel->fertilize_brand = $year['fertilize_brand'];
-                    $yearlyModel->fertilize_amount = $year['fertilize_amount'];
+                    $yearlyModel->date_raise = $yearlyDetail['date_raise'];
+                    $yearlyModel->date_sleep = $yearlyDetail['date_sleep'];
+                    $yearlyModel->fertilize_date = $yearlyDetail['fertilize_date'];
+                    $yearlyModel->fertilize_brand = $yearlyDetail['fertilize_brand'];
+                    $yearlyModel->fertilize_amount = $yearlyDetail['fertilize_amount'];
                     $yearlyModel->save();
+                }
+            }
+            //delete yearly details
+            $deletedIds = array_diff($oldIds, $newIds);
+            if (count($deletedIds)) {
+                foreach ($deletedIds as $deletedId) {
+                    YearlyDetail::findOne($deletedId)->softDelete();
+                    dd('ss');
                 }
             }
             return $this->redirect(['view', 'id' => $model->id]);

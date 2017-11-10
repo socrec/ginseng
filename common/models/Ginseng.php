@@ -157,7 +157,7 @@ class Ginseng extends \yii\db\ActiveRecord
 
     public function getYearlyDetails()
     {
-        return $this->hasMany(YearlyDetail::className(), ['ginseng_id' => 'id']);
+        return $this->hasMany(YearlyDetail::className(), ['ginseng_id' => 'id'])->where(['is_deleted' => null]);
     }
 
     public function getImages()
