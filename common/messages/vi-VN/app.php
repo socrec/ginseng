@@ -49,4 +49,6 @@ return [
     'Replace all Image' => 'Thay thế toàn bộ Ảnh',
     'Select year...' => 'Chọn năm',
     'Sicks' => 'Bệnh',
+    'Close' => 'Đóng',
+    'Save' => 'Lưu',
 ];

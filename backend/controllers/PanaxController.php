@@ -6,6 +6,7 @@ use common\constant\App;
 use common\constant\Auth;
 use common\models\Image;
 use common\models\YearlyDetail;
+use common\models\YearlySick;
 use Yii;
 use common\models\Ginseng;
 use common\models\GinsengSearch;
@@ -104,6 +105,7 @@ class PanaxController extends Controller
      */
     public function actionView($id)
     {
+        $sickModel = new YearlySick();
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -230,7 +232,6 @@ class PanaxController extends Controller
             if (count($deletedIds)) {
                 foreach ($deletedIds as $deletedId) {
                     YearlyDetail::findOne($deletedId)->softDelete();
-                    dd('ss');
                 }
             }
             return $this->redirect(['view', 'id' => $model->id]);

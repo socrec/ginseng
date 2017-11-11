@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use kartik\form\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Ginseng */
@@ -10,6 +11,23 @@ $this->title = $model->code;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Panax'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+<!-- Sick form Modals -->
+<div class="modal fade" id="add-sick-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <?php $form = ActiveForm::begin(['action' => ['panax/add-sick'], 'method' => 'POST', 'options' => ['enctype' => 'multipart/form-data']]); ?>
+
+                <?php ActiveForm::end(); ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('app', 'Close') ?></button>
+                <button type="button" class="btn btn-primary"><?= Yii::t('app', 'Save') ?></button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- END Sick form Modals -->
 <div class="ginseng-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
@@ -106,7 +124,9 @@ $this->params['breadcrumbs'][] = $this->title;
                         <div class="sub-section">
                             <div class="title">
                                 <?= Yii::t('app', 'Sicks') ?>
-
+                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add-sick-modal">
+                                    <?= Yii::t('app', 'Add Row') ?>
+                                </button>
                             </div>
                         </div>
                     </div>
