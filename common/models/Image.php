@@ -22,6 +22,16 @@ class Image extends \yii\db\ActiveRecord
     }
 
     /**
+     * Must override since this table don't have a PK
+     *
+     * @return array Composite PK
+     */
+    public static function primaryKey()
+    {
+        return ['object_id', 'object_type'];
+    }
+
+    /**
      * @inheritdoc
      */
     public function rules()

@@ -116,18 +116,6 @@ class Ginseng extends \yii\db\ActiveRecord
         }
     }
 
-    public function upload()
-    {
-        if ($this->validate()) {
-            foreach ($this->imageFiles as $file) {
-                $file->saveAs('uploads/panax/' . $file->baseName . '.' . $file->extension);
-            }
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     /**
      * @inheritdoc
      */

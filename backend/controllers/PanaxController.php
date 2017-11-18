@@ -105,10 +105,20 @@ class PanaxController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+
+        //get years for $sickModel
+        $tmp = [];
+        if (count($model->yearlyDetails)) {
+            foreach ($model->yearlyDetails as $year) {
+                $tmp[$year->id] = $year->year;
+            }
+        }
+
         $sickModel = new YearlySick();
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        $sickModel->yearList = $tmp;
+
+        return $this->render('view', compact('model', 'sickModel'));
     }
 
     /**

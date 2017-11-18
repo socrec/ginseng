@@ -16,8 +16,13 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-body">
-                <?php $form = ActiveForm::begin(['action' => ['panax/add-sick'], 'method' => 'POST', 'options' => ['enctype' => 'multipart/form-data']]); ?>
-
+                <?php $form = ActiveForm::begin(['action' => ['yearly-sick/create'], 'method' => 'POST', 'options' => ['enctype' => 'multipart/form-data']]); ?>
+                    <?= $form->field($sickModel, 'year_id')->dropDownList($sickModel->yearList) ?>
+                    <?= $form->field($sickModel, 'title')->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($sickModel, 'medicine')->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($sickModel, 'result')->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($sickModel, 'desc')->textarea() ?>
+                    <?= $form->field($model, 'imageFiles[]')->label(Yii::t('app', 'Image'))->fileInput(['multiple' => true, 'accept' => 'image/*']) ?>
                 <?php ActiveForm::end(); ?>
             </div>
             <div class="modal-footer">

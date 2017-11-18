@@ -51,4 +51,8 @@ return [
     'Sicks' => 'Bệnh',
     'Close' => 'Đóng',
     'Save' => 'Lưu',
+    'Sick Title' => 'Tên Bệnh',
+    'Medicine' => 'Thuốc Đã Dùng',
+    'Result' => 'Kêt Quả',
+    'Desc' => 'Mô Tả',
 ];
