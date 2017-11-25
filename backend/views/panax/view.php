@@ -12,23 +12,23 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Panax'), 'url' => ['
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <!-- Sick form Modals -->
-<div class="modal fade" id="add-sick-modal" tabindex="-1" role="dialog">
+<div class="modal fade" id="modal-add-sick" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-body">
-                <?php $form = ActiveForm::begin(['action' => ['yearly-sick/create'], 'method' => 'POST', 'options' => ['enctype' => 'multipart/form-data']]); ?>
+            <?php $form = ActiveForm::begin(['action' => ['yearly-sick/create'], 'method' => 'POST', 'options' => ['enctype' => 'multipart/form-data']]); ?>
+                <div class="modal-body">
                     <?= $form->field($sickModel, 'year_id')->dropDownList($sickModel->yearList) ?>
                     <?= $form->field($sickModel, 'title')->textInput(['maxlength' => true]) ?>
                     <?= $form->field($sickModel, 'medicine')->textInput(['maxlength' => true]) ?>
                     <?= $form->field($sickModel, 'result')->textInput(['maxlength' => true]) ?>
                     <?= $form->field($sickModel, 'desc')->textarea() ?>
-                    <?= $form->field($model, 'imageFiles[]')->label(Yii::t('app', 'Image'))->fileInput(['multiple' => true, 'accept' => 'image/*']) ?>
-                <?php ActiveForm::end(); ?>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('app', 'Close') ?></button>
-                <button type="button" class="btn btn-primary"><?= Yii::t('app', 'Save') ?></button>
-            </div>
+                    <?= $form->field($sickModel, 'imageFiles[]')->label(Yii::t('app', 'Image'))->fileInput(['multiple' => true, 'accept' => 'image/*']) ?>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('app', 'Close') ?></button>
+                    <button type="submit" class="btn btn-primary"><?= Yii::t('app', 'Save') ?></button>
+                </div>
+            <?php ActiveForm::end(); ?>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
@@ -114,7 +114,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <!-- Tab panes -->
             <div class="tab-content">
                 <?php foreach ($model->yearlyDetails as $index => $detail) : ?>
-                    <div role="tabpanel" class="tab-pane <?= $index == 0 ? 'active' : '' ?>" id="<?= $detail->year ?>">
+                    <div role="tabpanel" class="tab-pane <?= $index == 0 ? 'active' : '' ?>" year-id="<?= $detail->id ?>" id="<?= $detail->year ?>">
                         <?= DetailView::widget([
                             'model' => $detail,
                             'attributes' => [
@@ -129,10 +129,13 @@ $this->params['breadcrumbs'][] = $this->title;
                         <div class="sub-section">
                             <div class="title">
                                 <?= Yii::t('app', 'Sicks') ?>
-                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add-sick-modal">
+                                <button type="button" id="btn-add-sick" onclick="addSick($(this))" class="btn btn-success" data-toggle="modal" data-target="#modal-add-sick">
                                     <?= Yii::t('app', 'Add Row') ?>
                                 </button>
                             </div>
+                        </div>
+                        <div class="sick-list">
+
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -141,3 +144,14 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 </div>
+
+<?php $this->beginBlock('scripts') ?>
+    <script>
+        $(function () {
+            addSick = function (btn) {
+                var year = btn.parents('.tab-pane').first().attr('year-id');
+                $('select#yearlysick-year_id').val(year).change();
+            };
+        });
+    </script>
+<?php $this->endBlock(); ?>

@@ -91,4 +91,9 @@ class YearlySick extends \yii\db\ActiveRecord
             'updated_by' => Yii::t('app', 'Updated By'),
         ];
     }
+
+    public function getYearlyDetail()
+    {
+        return $this->hasOne(YearlyDetail::className(), ['id' => 'year_id']);
+    }
 }
