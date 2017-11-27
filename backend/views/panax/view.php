@@ -135,7 +135,22 @@ $this->params['breadcrumbs'][] = $this->title;
                             </div>
                         </div>
                         <div class="sick-list">
-
+                            <?php
+                            $dataProvider = new \yii\data\ActiveDataProvider([
+                                'query' => $detail->getSicks(),
+                            ]);
+                            ?>
+                            <?= \yii\grid\GridView::widget([
+                                'dataProvider' => $dataProvider,
+                                'columns' => [
+                                    ['class' => 'yii\grid\SerialColumn'],
+                                    'title',
+                                    'medicine',
+                                    'result',
+                                    'desc:ntext',
+                                    ['class' => 'yii\grid\ActionColumn'],
+                                ],
+                            ]); ?>
                         </div>
                     </div>
                 <?php endforeach; ?>

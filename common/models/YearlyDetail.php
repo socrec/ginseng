@@ -97,6 +97,6 @@ class YearlyDetail extends \yii\db\ActiveRecord
 
     public function getSicks()
     {
-        return $this->hasMany(YearlySick::className(), ['id' => '']);
+        return $this->hasMany(YearlySick::className(), ['year_id' => 'id']);
     }
 }
