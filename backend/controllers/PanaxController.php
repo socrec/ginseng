@@ -154,7 +154,7 @@ class PanaxController extends Controller
                 foreach ($data['years'] as $index => $yearlyDetail) {
                     $yearlyModel = new YearlyDetail();
                     $yearlyModel->year = $yearlyDetail['year'];
-                    $yearlyModel->ginseng_id = $yearlyDetail->id;
+                    $yearlyModel->ginseng_id = $model->id;
                     $yearlyModel->date_raise = $yearlyDetail['date_raise'];
                     $yearlyModel->date_sleep = $yearlyDetail['date_sleep'];
                     $yearlyModel->fertilize_date = $yearlyDetail['fertilize_date'];
@@ -186,14 +186,14 @@ class PanaxController extends Controller
             $model->save();
 
             //upload Image
-            $model->imageFiles = UploadedFile::getInstances($model, 'imageFiles');
-            if (count($model->imageFiles)) {
-                foreach ($model->imageFiles as $file) {
+            $imageFiles = UploadedFile::getInstances($model, 'imageFiles');
+            if (count($imageFiles)) {
+                $oldImages = Image::find()->where(['object_type' => App::OBJECT_PANAX, 'object_id' => $model->id])->all();
+                foreach ($oldImages as $oldImage) {
+                    $oldImage->delete();
+                }
+                foreach ($imageFiles as $file) {
                     //delete all old images
-                    $oldImages = Image::find()->where(['object_type' => App::OBJECT_PANAX, 'object_id' => $model->id])->all();
-                    foreach ($oldImages as $oldImage) {
-                        $oldImage->delete();
-                    }
 
                     //upload new files
                     $path = 'uploads/panax/' . uniqid() . '_' . $file->baseName . '.' . $file->extension;

@@ -148,7 +148,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'medicine',
                                     'result',
                                     'desc:ntext',
-                                    ['class' => 'yii\grid\ActionColumn'],
+//                                    ['class' => 'yii\grid\ActionColumn'],
                                 ],
                             ]); ?>
                         </div>

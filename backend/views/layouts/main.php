@@ -43,6 +43,7 @@ AppAsset::register($this);
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
+        //Panax menu
         if (Yii::$app->user->can(Auth::PERM_VIEW_GINSENG)) {
             $menuItems[] = [
                 'label' => Yii::t('app', 'Panax'),
@@ -57,6 +58,15 @@ AppAsset::register($this);
             ];
         }
 
+        //Article menu
+        if (Yii::$app->user->can(Auth::PERM_VIEW_ARTICLE)) {
+            $menuItems[] = [
+                'label' => Yii::t('app', 'Article'),
+                'url' => ['article/index']
+            ];
+        }
+
+        //User menu
         if (Yii::$app->user->can(Auth::PERM_VIEW_USER)) {
             $menuItems[] = [
                 'label' => Yii::t('app', 'User'),

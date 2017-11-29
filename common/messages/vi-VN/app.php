@@ -55,4 +55,8 @@ return [
     'Medicine' => 'Thuốc Đã Dùng',
     'Result' => 'Kêt Quả',
     'Desc' => 'Mô Tả',
+    'Article' => 'Bài Viết',
+    'Title' => 'Tiêu Đề',
+    'Content' => 'Nội Dung',
+    'Main Image' => 'Ảnh Đại Diện',
 ];

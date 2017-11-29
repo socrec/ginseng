@@ -31,6 +31,13 @@ class Auth
     const PERM_EDIT_GINSENG = 'editGinseng';
     const PERM_DELETE_GINSENG = 'deleteGinseng';
 
+    //
+    const PERM_MANAGE_ARTICLE = 'manageArticle';
+    const PERM_ADD_ARTICLE = 'addArticle';
+    const PERM_VIEW_ARTICLE = 'viewArticle';
+    const PERM_EDIT_ARTICLE = 'editArticle';
+    const PERM_DELETE_ARTICLE = 'deleteArticle';
+
     //Draft
     const PERM_APPROVE_DRAFT = 'approveDraft';
     /* END Permissions */
