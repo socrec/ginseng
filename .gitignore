@@ -1,4 +1,4 @@
 vendor
 .idea
 backend/web/upload/*
-backend/web/uploads/panax/*
+backend/web/uploads
