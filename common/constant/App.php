@@ -66,4 +66,5 @@ class App
     const OBJECT_DRAFT = 'draft';
     const OBJECT_YEAR = 'year';
     const OBJECT_SICK = 'sick';
+    const OBJECT_ARTICLE = 'article';
 }

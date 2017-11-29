@@ -20,7 +20,7 @@ use dosamigos\ckeditor\CKEditor;
         'preset' => 'basic'
     ]) ?>
 
-    <?= $form->field($model, 'imageFile')->label((isset($model->id) ? Yii::t('app', 'Replace all Image') : Yii::t('app', 'Main Image')))->fileInput(['accept' => 'image/*']) ?>
+    <?= $form->field($model, 'imageFile')->label(Yii::t('app', 'Main Image'))->fileInput(['accept' => 'image/*']) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

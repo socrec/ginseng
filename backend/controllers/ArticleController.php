@@ -2,12 +2,17 @@
 
 namespace backend\controllers;
 
+use common\constant\App;
+use common\constant\Auth;
+use common\models\Image;
 use Yii;
 use common\models\Article;
 use common\models\AricleSearch;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * ArticleController implements the CRUD actions for Article model.
@@ -20,6 +25,31 @@ class ArticleController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['index', 'view'],
+                        'allow' => true,
+                        'roles' => [Auth::PERM_VIEW_ARTICLE]
+                    ],
+                    [
+                        'actions' => ['update'],
+                        'allow' => true,
+                        'roles' => [Auth::PERM_EDIT_ARTICLE],
+                    ],
+                    [
+                        'actions' => ['create'],
+                        'allow' => true,
+                        'roles' => [Auth::PERM_ADD_ARTICLE],
+                    ],
+                    [
+                        'actions' => ['delete'],
+                        'allow' => true,
+                        'roles' => [Auth::PERM_DELETE_ARTICLE],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -66,6 +96,18 @@ class ArticleController extends Controller
         $model = new Article();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            //upload Image
+            $file = UploadedFile::getInstance($model, 'imageFile');
+            $path = 'uploads/article/' . uniqid() . '_' . $file->baseName . '.' . $file->extension;
+            $file->saveAs($path);
+
+            //save to db
+            $image = new Image();
+            $image->path = $path;
+            $image->object_id = $model->id;
+            $image->object_type = App::OBJECT_ARTICLE;
+            $image->save();
+
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
@@ -85,6 +127,23 @@ class ArticleController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            //upload Image
+            $file = UploadedFile::getInstance($model, 'imageFile');
+            if ($file)  {
+                $oldImage = Image::find()->where(['object_type' => App::OBJECT_ARTICLE, 'object_id' => $model->id])->one();
+                $oldImage->delete();
+
+                $path = 'uploads/article/' . uniqid() . '_' . $file->baseName . '.' . $file->extension;
+                $file->saveAs($path);
+
+                //save to db
+                $image = new Image();
+                $image->path = $path;
+                $image->object_id = $model->id;
+                $image->object_type = App::OBJECT_ARTICLE;
+                $image->save();
+            }
+
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
@@ -101,7 +160,7 @@ class ArticleController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $this->findModel($id)->softDelete();
 
         return $this->redirect(['index']);
     }

@@ -44,6 +44,7 @@ class AricleSearch extends Article
         $query = Article::find();
 
         // add conditions that should always apply here
+        $query->where(['is_deleted' => null]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

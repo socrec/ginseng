@@ -2,7 +2,12 @@
 
 namespace common\models;
 
+use common\constant\App;
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
+use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
  * This is the model class for table "article".
@@ -34,15 +39,36 @@ class Article extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                // if you're using datetime instead of UNIX timestamp:
+                'value' => new Expression('NOW()'),
+            ],
+            BlameableBehavior::className(),
+            'softDeleteBehavior' => [
+                'class' => SoftDeleteBehavior::className(),
+                'softDeleteAttributeValues' => [
+                    'is_deleted' => true
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function rules()
     {
         return [
-            [['content', 'title', 'imageFile'], 'required'],
+            [['content', 'title'], 'required'],
             [['content'], 'string'],
             [['created_at', 'updated_at'], 'safe'],
             [['created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['title'], 'string', 'max' => 100],
-            [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg'],
+            [['imageFile'], 'file', 'extensions' => 'png, jpg'],
         ];
     }
 
@@ -61,5 +87,10 @@ class Article extends \yii\db\ActiveRecord
             'updated_by' => Yii::t('app', 'Updated By'),
             'is_deleted' => Yii::t('app', 'Is Deleted'),
         ];
+    }
+
+    public function getImage()
+    {
+        return $this->hasOne(Image::className(), ['object_id' => 'id'])->where(['object_type' => App::OBJECT_ARTICLE]);
     }
 }
