@@ -144,7 +144,7 @@ class DraftController extends Controller
     public function actionUpdate($id)
     {
         $ginsengModel = PanaxController::findModel($id);
-        $model = cloneModel(DraftGinseng::className(), $ginsengModel);
+        $model = cloneModel(DraftGinseng::className(), $ginsengModel, ['id']);
 
         $yearlyModel = new DraftYear();
         if ($ginsengModel->id && $ginsengModel->getYearlyDetails()->count()) {
@@ -209,18 +209,45 @@ class DraftController extends Controller
     {
         $model = $this->findModel($id);
         if ($model->ginseng_id) {
-            dd('ss');
+            $ginsengModel = PanaxController::findModel($model->ginseng_id);
+            if ($ginsengModel) {
+                $attributes = $model->attributes;
+                unset($attributes['ginseng_id']);
+                unset($attributes['id']);
+                foreach($attributes as  $attribute => $val) {
+                    $ginsengModel->{$attribute} = $val;
+                }
+            }
+            $ginsengModel->save();
+
+            //delete all old year details
+            if (count($ginsengModel->yearlyDetails)) {
+                foreach ($model->yearlyDetails as $yearlyDetail ) {
+                    $yearlyDetail->softDelete();
+                }
+            }
+            if (count($model->yearlyDetails)) {
+                foreach ($model->yearlyDetails as $draftYear) {
+                    $yearlyDetail = cloneModel(YearlyDetail::className(), $draftYear, ['draft_id', 'id']);
+                    $yearlyDetail->ginseng_id = $draftYear->draft_id;
+                    $yearlyDetail->save();
+                }
+            }
         } else {
-            $ginsengModel = cloneModel(Ginseng::className(), $model, ['ginseng_id']);
+            $ginsengModel = cloneModel(Ginseng::className(), $model, ['ginseng_id'], ['id']);
             $ginsengModel->save();
 
             if (count($model->yearlyDetails)) {
                 foreach ($model->yearlyDetails as $draftYear) {
-                    $yearlyDetail = cloneModel(YearlyDetail::className(), );
+                    $yearlyDetail = cloneModel(YearlyDetail::className(), $draftYear, ['draft_id', 'id']);
+                    $yearlyDetail->ginseng_id = $draftYear->draft_id;
+                    $yearlyDetail->save();
                 }
             }
-            dd($ginsengModel);
         }
+        $model->softDelete();
+        Yii::$app->session->setFlash('alert', Yii::t('app', 'Approved successfully.'));
+        return $this->redirect(['index']);
     }
 
     /**

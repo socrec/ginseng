@@ -65,4 +65,5 @@ return [
     'Approve' => 'Duyệt',
     'not set' => 'không có',
     'Original' => 'Cây Gốc',
+    'Approved successfully.' => 'Duyệt thành công.',
 ];

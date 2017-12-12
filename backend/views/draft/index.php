@@ -15,6 +15,13 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <div class="col-lg-12">
+        <?php if (Yii::$app->session->hasFlash('alert')): ?>
+            <div class="alert alert-dismissable alert-success" role="alert">
+                <?= Yii::$app->session->getFlash('alert') ?>
+            </div>
+        <?php endif; ?>
+    </div>
 
 <?php Pjax::begin(); ?>    <?= GridView::widget([
         'dataProvider' => $dataProvider,
