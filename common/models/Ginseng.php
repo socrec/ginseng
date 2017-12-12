@@ -93,7 +93,6 @@ class Ginseng extends \yii\db\ActiveRecord
             [['code'], 'string', 'max' => 200],
             [['origin', 'planted_by'], 'string', 'max' => 250],
             [['garden_no', 'line_no'], 'string', 'max' => 5],
-            [['code'], 'unique'],
             [['imageFiles'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxFiles' => 10],
         ];
     }

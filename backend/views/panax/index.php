@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
     <div class="col-lg-12">
-        <?php if(Yii::$app->session->hasFlash('alert')): ?>
+        <?php if (Yii::$app->session->hasFlash('alert')): ?>
             <div class="alert alert-dismissable alert-success" role="alert">
                 <?= Yii::$app->session->getFlash('alert') ?>
             </div>
@@ -55,14 +55,23 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->parent ? $model->parent->code : null;
                 }
             ],
-            // 'how_to_use:ntext',
-            // 'notice:ntext',
-            // 'created_at',
-            // 'updated_at',
-            // 'deleted_at',
-            // 'created_by',
-            // 'updated_by',
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{view} {update} ' . (Yii::$app->user->can(Auth::PERM_DELETE_GINSENG) ? '{delete}' : ''),
+                'buttons' => [
+                    'update' => function ($url, $model) {
+                        if (Yii::$app->user->can(Auth::PERM_EDIT_GINSENG)) {
+                            return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
+                                'title' => Yii::t('app', 'Edit'),
+                            ]);
+                        } elseif (Yii::$app->user->can(Auth::PERM_ADD_DRAFT)) {
+                            return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['draft/update', 'id' => $model->id], [
+                                'title' => Yii::t('app', 'Edit'),
+                            ]);
+                        }
+                    }
+                ]
+            ],
         ],
     ]); ?>
     <?php Pjax::end(); ?>

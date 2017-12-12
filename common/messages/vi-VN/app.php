@@ -62,4 +62,7 @@ return [
     'Draft' => 'Bản Nháp',
     'Your update created successfully. Please wait for admin\'s approval.' => 'Chỉnh sửa của bạn đã gửi thành công. Vui lòng đợi Admin kiểm duyệt.',
     'Submit' => 'Hoàn Tất',
+    'Approve' => 'Duyệt',
+    'not set' => 'không có',
+    'Original' => 'Cây Gốc',
 ];

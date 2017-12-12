@@ -50,10 +50,16 @@ function getUserRoleName()
  * Copy model object data
  * @param $className string
  * @param $model \yii\base\Model
+ * @param $excepts array
  * @return mixed \yii\base\Model
  */
-function cloneModel($className,$model) {
+function cloneModel($className,$model, $excepts) {
     $attributes = $model->attributes;
+    if (count($excepts)) {
+        foreach ($excepts as $except) {
+            unset($attributes[$except]);
+        }
+    }
     $newObj = new $className;
     foreach($attributes as  $attribute => $val) {
         $newObj->{$attribute} = $val;

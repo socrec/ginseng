@@ -5,7 +5,9 @@ namespace backend\controllers;
 use common\constant\App;
 use common\constant\Auth;
 use common\models\DraftYear;
+use common\models\Ginseng;
 use common\models\Image;
+use common\models\YearlyDetail;
 use Yii;
 use common\models\DraftGinseng;
 use common\models\DraftGinsengSearch;
@@ -98,7 +100,6 @@ class DraftController extends Controller
         $yearlyModel = new DraftYear();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-
             //upload Image
             $model->imageFiles = UploadedFile::getInstances($model, 'imageFiles');
             foreach ($model->imageFiles as $file) {
@@ -113,7 +114,7 @@ class DraftController extends Controller
                 $image->save();
             }
 
-            $data = Yii::$app->request->post('Ginseng');
+            $data = Yii::$app->request->post('DraftGinseng');
             if (count($data['years']) && $data['years'][0]['year']) {
                 foreach ($data['years'] as $index => $yearlyDetail) {
                     $yearlyModel = new DraftYear();
@@ -178,7 +179,7 @@ class DraftController extends Controller
                 }
             }
 
-            $data = Yii::$app->request->post('Ginseng');
+            $data = Yii::$app->request->post('DraftGinseng');
 
             //update yearly details
             if (count($data['years']) && $data['years'][0]) {
@@ -201,6 +202,24 @@ class DraftController extends Controller
                 'model' => $model,
                 'yearlyModel' => $yearlyModel,
             ]);
+        }
+    }
+
+    public function actionApprove($id)
+    {
+        $model = $this->findModel($id);
+        if ($model->ginseng_id) {
+            dd('ss');
+        } else {
+            $ginsengModel = cloneModel(Ginseng::className(), $model, ['ginseng_id']);
+            $ginsengModel->save();
+
+            if (count($model->yearlyDetails)) {
+                foreach ($model->yearlyDetails as $draftYear) {
+                    $yearlyDetail = cloneModel(YearlyDetail::className(), );
+                }
+            }
+            dd($ginsengModel);
         }
     }
 

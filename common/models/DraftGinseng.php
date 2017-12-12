@@ -16,13 +16,14 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  * @property integer $id
  * @property integer $ginseng_id
  * @property string $origin
+ * @property string $code
  * @property integer $status
  * @property string $planted_by
  * @property string $planted_at
  * @property string $weight
  * @property string $garden_no
  * @property string $line_no
- * @property string $parent_code
+ * @property int $parent_id
  * @property string $how_to_use
  * @property string $notice
  * @property string $created_at
@@ -87,7 +88,6 @@ class DraftGinseng extends \yii\db\ActiveRecord
             ['code', 'unique', 'filter' => ['is_deleted' => null]],
             [['origin', 'planted_by'], 'string', 'max' => 250],
             [['garden_no', 'line_no'], 'string', 'max' => 5],
-            [['code'], 'unique'],
             [['imageFiles'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxFiles' => 10],
         ];
     }
@@ -134,6 +134,11 @@ class DraftGinseng extends \yii\db\ActiveRecord
     public function getParent()
     {
         return $this->hasOne(Ginseng::className(), ['id' => 'parent_id']);
+    }
+
+    public function getOriginal()
+    {
+        return $this->hasOne(Ginseng::className(), ['id' => 'ginseng_id']);
     }
 
     /**

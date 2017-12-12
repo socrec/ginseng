@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use common\constant\Auth;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\DraftGinsengSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -20,6 +21,18 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
+            [
+                'label' => Yii::t('app', 'Original'),
+                'value' =>  function ($model) {
+                    if ($model->original) {
+                        return Html::a($model->original->code, ['panax/view', 'id' => $model->ginseng_id], [
+                            'target' => '_blank'
+                        ]);
+                    }
+                    return '<span class="not-set">('. Yii::t('app', 'not set') .')</span>';
+                },
+                'format' => 'raw'
+            ],
             'code',
             'origin',
             [
@@ -33,7 +46,19 @@ $this->params['breadcrumbs'][] = $this->title;
             'weight',
             'garden_no',
             'line_no',
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{view} {approve} {delete}',
+                'buttons' => [
+                    'approve' => function ($url, $model) {
+                        if (Yii::$app->user->can(Auth::PERM_APPROVE_DRAFT)) {
+                            return Html::a('<span class="glyphicon glyphicon-ok"></span>', ['draft/approve', 'id' => $model->id], [
+                                'title' => Yii::t('app', 'Approve'),
+                            ]);
+                        }
+                    }
+                ]
+            ],
         ],
     ]); ?>
 <?php Pjax::end(); ?></div>
