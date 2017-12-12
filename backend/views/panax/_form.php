@@ -20,6 +20,7 @@ use unclead\multipleinput\MultipleInput;
 
     <div class="row">
         <div class="col-md-6">
+            <?= $form->field($model, 'code')->textInput(['maxlength' => true]) ?>
             <?= $form->field($model, 'origin')->textInput(['maxlength' => true]) ?>
 
             <?= $form->field($model, 'status')->dropDownList([
@@ -39,8 +40,6 @@ use unclead\multipleinput\MultipleInput;
             ]) ?>
 
             <?= $form->field($model, 'how_to_use')->textarea(['rows' => 6]) ?>
-
-            <?= $form->field($model, 'imageFiles[]')->label((isset($model->id) ? Yii::t('app', 'Replace all Image') : Yii::t('app', 'Image')))->fileInput(['multiple' => true, 'accept' => 'image/*']) ?>
         </div>
         <div class="col-md-6">
             <?= $form->field($model, 'parent_id')->widget(Select2::className(), [
@@ -61,6 +60,8 @@ use unclead\multipleinput\MultipleInput;
             <?= $form->field($model, 'garden_no')->textInput(['maxlength' => true]) ?>
 
             <?= $form->field($model, 'line_no')->textInput(['maxlength' => true]) ?>
+
+            <?= $form->field($model, 'imageFiles[]')->label((isset($model->id) ? Yii::t('app', 'Replace all Image') : Yii::t('app', 'Image')))->fileInput(['multiple' => true, 'accept' => 'image/*']) ?>
 
             <?= $form->field($model, 'notice')->textarea(['rows' => 6]) ?>
         </div>

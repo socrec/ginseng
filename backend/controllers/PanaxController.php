@@ -131,10 +131,7 @@ class PanaxController extends Controller
         $model = new Ginseng();
         $yearlyModel = new YearlyDetail();
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $model->code = 'PV' . strtoupper(uniqid());
-            $model->save();
-
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             //upload Image
             $model->imageFiles = UploadedFile::getInstances($model, 'imageFiles');
             foreach ($model->imageFiles as $file) {
@@ -170,7 +167,8 @@ class PanaxController extends Controller
     }
 
     /**
-     * Updates an existing Ginseng model.     * If update is successful, the browser will be redirected to the 'view' page.
+     * Updates an existing Ginseng model.
+     * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
      */
@@ -188,14 +186,14 @@ class PanaxController extends Controller
             //upload Image
             $imageFiles = UploadedFile::getInstances($model, 'imageFiles');
             if (count($imageFiles)) {
+                //delete all old images
                 $oldImages = Image::find()->where(['object_type' => App::OBJECT_PANAX, 'object_id' => $model->id])->all();
                 foreach ($oldImages as $oldImage) {
                     $oldImage->delete();
                 }
-                foreach ($imageFiles as $file) {
-                    //delete all old images
 
-                    //upload new files
+                //upload new files
+                foreach ($imageFiles as $file) {
                     $path = 'uploads/panax/' . uniqid() . '_' . $file->baseName . '.' . $file->extension;
                     $file->saveAs($path);
 
@@ -273,7 +271,7 @@ class PanaxController extends Controller
      * @return Ginseng the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
+    public static function findModel($id)
     {
         $model = Ginseng::findOne([
             'id' => $id,

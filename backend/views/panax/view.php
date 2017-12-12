@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use kartik\form\ActiveForm;
+use common\constant\Auth;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Ginseng */
@@ -38,14 +39,24 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
+        <?php
+        if (Yii::$app->user->can(Auth::PERM_DELETE_GINSENG)) {
+            echo Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']);
+        } elseif (Yii::$app->user->can(Auth::PERM_ADD_DRAFT)) {
+            echo Html::a(Yii::t('app', 'Update'), ['draft/update', 'id' => $model->id], ['class' => 'btn btn-primary']);
+        }
+        ?>
+        <?php
+        if (Yii::$app->user->can(Auth::PERM_DELETE_GINSENG)) {
+            echo Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
+                'class' => 'btn btn-danger',
+                'data' => [
+                    'confirm' => 'Are you sure you want to delete this item?',
+                    'method' => 'post',
+                ],
+            ]);
+        }
+        ?>
     </p>
 
     <div class="row">

@@ -84,7 +84,8 @@ class Ginseng extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['weight', 'origin', 'planted_by', 'garden_no', 'line_no'], 'required'],
+            [['code', 'weight', 'origin', 'planted_by', 'garden_no', 'line_no'], 'required'],
+            ['code', 'unique', 'filter' => ['is_deleted' => null]],
             [['status', 'created_by', 'updated_by'], 'integer'],
             [['planted_at', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['weight', 'parent_id'], 'number'],
@@ -106,7 +107,6 @@ class Ginseng extends \yii\db\ActiveRecord
         $requiredValidator = new RequiredValidator();
 
         foreach($this->$attribute as $index => $row) {
-            dd($row);
             $error = null;
             $requiredValidator->validate($row['priority'], $error);
             if (!empty($error)) {

@@ -2,9 +2,12 @@
 
 namespace common\models;
 
+use common\constant\App;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
+use yii\validators\RequiredValidator;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
@@ -30,6 +33,15 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  */
 class DraftGinseng extends \yii\db\ActiveRecord
 {
+    public $imageFiles;
+    public $years;
+    public $year;
+    public $date_raise;
+    public $date_sleep;
+    public $fertilize_date;
+    public $fertilize_brand;
+    public $fertilize_amount;
+
     /**
      * @inheritdoc
      */
@@ -65,14 +77,63 @@ class DraftGinseng extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['ginseng_id', 'status', 'created_by', 'updated_by'], 'integer'],
+            [['code', 'weight', 'origin', 'planted_by', 'garden_no', 'line_no'], 'required'],
+            [['status', 'created_by', 'updated_by'], 'integer'],
             [['planted_at', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
-            [['weight'], 'number'],
+            [['weight', 'parent_id'], 'number'],
             [['how_to_use', 'notice'], 'string'],
+            [['code'], 'string', 'max' => 200],
+            ['code', 'unique', 'filter' => ['is_deleted' => null], 'targetClass' => Ginseng::className()],
+            ['code', 'unique', 'filter' => ['is_deleted' => null]],
             [['origin', 'planted_by'], 'string', 'max' => 250],
             [['garden_no', 'line_no'], 'string', 'max' => 5],
-            [['parent_code'], 'string', 'max' => 200],
+            [['code'], 'unique'],
+            [['imageFiles'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxFiles' => 10],
         ];
+    }
+
+    /**
+     * Validation for `$years`
+     * @param $attribute
+     */
+    public function validateYears($attribute)
+    {
+        $requiredValidator = new RequiredValidator();
+
+        foreach($this->$attribute as $index => $row) {
+            $error = null;
+            $requiredValidator->validate($row['priority'], $error);
+            if (!empty($error)) {
+                $key = $attribute . '[' . $index . '][priority]';
+                $this->addError($key, $error);
+            }
+        }
+    }
+
+    public function getYearlyDetails()
+    {
+        return $this->hasMany(DraftYear::className(), ['draft_id' => 'id'])->where(['is_deleted' => null]);
+    }
+
+    public function getImages()
+    {
+        return $this->hasMany(Image::className(), ['object_id' => 'id'])->where(['object_type' => App::OBJECT_DRAFT]);
+    }
+
+    public function getStatusText()
+    {
+        if ($this->status == App::PANAX_STATUS_AVAILABLE) {
+            return Yii::t('app/panax', 'Available');
+        } elseif ($this->status == App::PANAX_STATUS_SOLD) {
+            return Yii::t('app/panax', 'Sold');
+        } else {
+            return Yii::t('app/panax', 'Dead');
+        }
+    }
+
+    public function getParent()
+    {
+        return $this->hasOne(Ginseng::className(), ['id' => 'parent_id']);
     }
 
     /**
@@ -82,22 +143,23 @@ class DraftGinseng extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'ginseng_id' => 'Ginseng ID',
-            'origin' => 'Origin',
-            'status' => 'Status',
-            'planted_by' => 'Planted By',
-            'planted_at' => 'Planted At',
-            'weight' => 'Weight',
-            'garden_no' => 'Garden No',
-            'line_no' => 'Line No',
-            'parent_code' => 'Parent Code',
-            'how_to_use' => 'How To Use',
-            'notice' => 'Notice',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'deleted_at' => 'Deleted At',
-            'created_by' => 'Created By',
-            'updated_by' => 'Updated By',
+            'code' => 'Code',
+            'origin' => Yii::t('app', 'Origin'),
+            'status' => Yii::t('app', 'Status'),
+            'planted_by' => Yii::t('app', 'Planted By'),
+            'planted_at' => Yii::t('app', 'Planted At'),
+            'weight' => Yii::t('app', 'Weight (g)'),
+            'garden_no' => Yii::t('app', 'Garden No'),
+            'line_no' => Yii::t('app', 'Line No'),
+            'parent_id' => Yii::t('app', 'Parent'),
+            'how_to_use' => Yii::t('app', 'How To Use'),
+            'notice' => Yii::t('app', 'Notice'),
+            'imageFiles' => Yii::t('app', 'Image'),
+            'created_at' => Yii::t('app', 'Created At'),
+            'updated_at' => Yii::t('app', 'Updated At'),
+            'deleted_at' => Yii::t('app', 'Deleted At'),
+            'created_by' => Yii::t('app', 'Created By'),
+            'updated_by' => Yii::t('app', 'Updated By'),
         ];
     }
 }

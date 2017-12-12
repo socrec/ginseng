@@ -40,6 +40,9 @@ class Auth
 
     //Draft
     const PERM_APPROVE_DRAFT = 'approveDraft';
+    const PERM_ADD_DRAFT = 'addDraft';
+    const PERM_VIEW_DRAFT = 'viewDraft';
+    const PERM_DELETE_DRAFT = 'deleteDraft';
     /* END Permissions */
 
 }

@@ -4,18 +4,20 @@ use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\DraftGinseng */
+/* @var $yearlyModel common\models\DraftYear */
 
-$this->title = 'Update Draft Ginseng: ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Draft Ginsengs', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->title = Yii::t('app', 'Update') . ': ' . $model->code;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Panax'), 'url' => ['panax/index']];
+$this->params['breadcrumbs'][] = ['label' => $model->code, 'url' => ['panax/view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
-<div class="draft-ginseng-update">
+<div class="ginseng-update">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?= $this->render('_form', [
         'model' => $model,
+        'yearlyModel' => $yearlyModel,
     ]) ?>
 
 </div>

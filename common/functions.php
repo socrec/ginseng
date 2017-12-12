@@ -30,3 +30,33 @@ function dd()
     }
     die();
 }
+
+/**
+ * Get current user's role
+ * @return bool|string
+ */
+function getUserRoleName()
+{
+    $roles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->id);
+
+    if (is_array($roles) && count($roles)) {
+        $role = reset($roles);
+        return $role->name;
+    }
+    return false;
+}
+
+/**
+ * Copy model object data
+ * @param $className string
+ * @param $model \yii\base\Model
+ * @return mixed \yii\base\Model
+ */
+function cloneModel($className,$model) {
+    $attributes = $model->attributes;
+    $newObj = new $className;
+    foreach($attributes as  $attribute => $val) {
+        $newObj->{$attribute} = $val;
+    }
+    return $newObj;
+}

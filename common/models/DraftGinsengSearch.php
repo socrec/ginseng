@@ -19,7 +19,7 @@ class DraftGinsengSearch extends DraftGinseng
     {
         return [
             [['id', 'ginseng_id', 'status', 'created_by', 'updated_by'], 'integer'],
-            [['origin', 'planted_by', 'planted_at', 'garden_no', 'line_no', 'parent_code', 'how_to_use', 'notice', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
+            [['origin', 'planted_by', 'planted_at', 'garden_no', 'line_no', 'parent_id', 'how_to_use', 'notice', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['weight'], 'number'],
         ];
     }
@@ -77,7 +77,7 @@ class DraftGinsengSearch extends DraftGinseng
             ->andFilterWhere(['like', 'planted_by', $this->planted_by])
             ->andFilterWhere(['like', 'garden_no', $this->garden_no])
             ->andFilterWhere(['like', 'line_no', $this->line_no])
-            ->andFilterWhere(['like', 'parent_code', $this->parent_code])
+            ->andFilterWhere(['like', 'parent_id', $this->parent_id])
             ->andFilterWhere(['like', 'how_to_use', $this->how_to_use])
             ->andFilterWhere(['like', 'notice', $this->notice]);
 

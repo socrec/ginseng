@@ -2,7 +2,10 @@
 
 namespace backend\controllers;
 
+use common\constant\App;
 use common\constant\Auth;
+use common\models\DraftYear;
+use common\models\Image;
 use Yii;
 use common\models\DraftGinseng;
 use common\models\DraftGinsengSearch;
@@ -10,6 +13,7 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * DraftController implements the CRUD actions for DraftGinseng model.
@@ -28,12 +32,22 @@ class DraftController extends Controller
                     [
                         'actions' => ['index', 'view'],
                         'allow' => true,
-                        'roles' => [Auth::PERM_APPROVE_DRAFT]
+                        'roles' => [Auth::PERM_VIEW_DRAFT]
+                    ],
+                    [
+                        'actions' => ['create', 'update'],
+                        'allow' => true,
+                        'roles' => [Auth::PERM_ADD_DRAFT],
+                    ],
+                    [
+                        'actions' => ['approve'],
+                        'allow' => true,
+                        'roles' => [Auth::PERM_APPROVE_DRAFT],
                     ],
                     [
                         'actions' => ['delete'],
                         'allow' => true,
-                        'roles' => [Auth::PERM_DELETE_GINSENG],
+                        'roles' => [Auth::PERM_DELETE_DRAFT],
                     ],
                 ],
             ],
@@ -74,6 +88,123 @@ class DraftController extends Controller
     }
 
     /**
+     * Creates a new Draft model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionCreate()
+    {
+        $model = new DraftGinseng();
+        $yearlyModel = new DraftYear();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+
+            //upload Image
+            $model->imageFiles = UploadedFile::getInstances($model, 'imageFiles');
+            foreach ($model->imageFiles as $file) {
+                $path = 'uploads/panax/' . uniqid() . '_' . $file->baseName . '.' . $file->extension;
+                $file->saveAs($path);
+
+                //save to db
+                $image = new Image();
+                $image->path = $path;
+                $image->object_id = $model->id;
+                $image->object_type = App::OBJECT_DRAFT;
+                $image->save();
+            }
+
+            $data = Yii::$app->request->post('Ginseng');
+            if (count($data['years']) && $data['years'][0]['year']) {
+                foreach ($data['years'] as $index => $yearlyDetail) {
+                    $yearlyModel = new DraftYear();
+                    $yearlyModel->year = $yearlyDetail['year'];
+                    $yearlyModel->draft_id = $model->id;
+                    $yearlyModel->date_raise = $yearlyDetail['date_raise'];
+                    $yearlyModel->date_sleep = $yearlyDetail['date_sleep'];
+                    $yearlyModel->fertilize_date = $yearlyDetail['fertilize_date'];
+                    $yearlyModel->fertilize_brand = $yearlyDetail['fertilize_brand'];
+                    $yearlyModel->fertilize_amount = $yearlyDetail['fertilize_amount'];
+                    $yearlyModel->save();
+                }
+            }
+            Yii::$app->session->setFlash('alert', Yii::t('app', 'Your update created successfully. Please wait for admin\'s approval.'));
+            return $this->redirect(['panax/index']);
+        } else {
+            return $this->render('create', compact('model', 'yearlyModel'));
+        }
+    }
+
+    /**
+     * Updates an existing Ginseng model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionUpdate($id)
+    {
+        $ginsengModel = PanaxController::findModel($id);
+        $model = cloneModel(DraftGinseng::className(), $ginsengModel);
+
+        $yearlyModel = new DraftYear();
+        if ($ginsengModel->id && $ginsengModel->getYearlyDetails()->count()) {
+            $model->years = $ginsengModel->getYearlyDetails()->all();
+        }
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $model->save();
+
+            //upload Image
+            $imageFiles = UploadedFile::getInstances($model, 'imageFiles');
+            if (count($imageFiles)) {
+                //delete all old images
+                $oldImages = Image::find()->where(['object_type' => App::OBJECT_DRAFT, 'object_id' => $model->id])->all();
+                if (count($oldImages)) {
+                    foreach ($oldImages as $oldImage) {
+                        $oldImage->delete();
+                    }
+                }
+
+                //upload new files
+                foreach ($imageFiles as $file) {
+                    $path = 'uploads/panax/' . uniqid() . '_' . $file->baseName . '.' . $file->extension;
+                    $file->saveAs($path);
+
+                    //save to db
+                    $image = new Image();
+                    $image->path = $path;
+                    $image->object_id = $model->id;
+                    $image->object_type = App::OBJECT_DRAFT;
+                    $image->save();
+                }
+            }
+
+            $data = Yii::$app->request->post('Ginseng');
+
+            //update yearly details
+            if (count($data['years']) && $data['years'][0]) {
+                foreach ($data['years'] as $index => $yearlyDetail) {
+                    $yearlyModel = new DraftYear();
+                    $yearlyModel->year = $yearlyDetail['year'];
+                    $yearlyModel->draft_id = $model->id;
+                    $yearlyModel->date_raise = $yearlyDetail['date_raise'];
+                    $yearlyModel->date_sleep = $yearlyDetail['date_sleep'];
+                    $yearlyModel->fertilize_date = $yearlyDetail['fertilize_date'];
+                    $yearlyModel->fertilize_brand = $yearlyDetail['fertilize_brand'];
+                    $yearlyModel->fertilize_amount = $yearlyDetail['fertilize_amount'];
+                    $yearlyModel->save();
+                }
+            }
+            Yii::$app->session->setFlash('alert', Yii::t('app', 'Your update created successfully. Please wait for admin\'s approval.'));
+            return $this->redirect(['panax/index']);
+        } else {
+            return $this->render('update', [
+                'model' => $model,
+                'yearlyModel' => $yearlyModel,
+            ]);
+        }
+    }
+
+    /**
      * Deletes an existing DraftGinseng model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
@@ -81,7 +212,7 @@ class DraftController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $this->findModel($id)->softDelete();
 
         return $this->redirect(['index']);
     }
