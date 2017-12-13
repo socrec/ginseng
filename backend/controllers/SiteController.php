@@ -1,6 +1,10 @@
 <?php
 namespace backend\controllers;
 
+use common\constant\App;
+use common\models\Article;
+use common\models\DraftGinseng;
+use common\models\Ginseng;
 use Yii;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -60,7 +64,19 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $info = new \stdClass();
+        $info->panax['all'] = Ginseng::find()->where(['is_deleted' => null])->count();
+        $info->panax['sold'] = Ginseng::find()->where(['is_deleted' => null, 'status' => App::PANAX_STATUS_SOLD])->count();
+        $info->panax['instock'] = Ginseng::find()->where(['is_deleted' => null, 'status' => App::PANAX_STATUS_AVAILABLE])->count();
+        $info->panax['dead'] = Ginseng::find()->where(['is_deleted' => null, 'status' => App::PANAX_STATUS_DEAD])->count();
+
+        $info->draft['all'] = DraftGinseng::find()->count();
+        $info->draft['done'] = DraftGinseng::find()->where(['is_deleted' => 1])->count();
+        $info->draft['not_done'] = DraftGinseng::find()->where(['is_deleted' => null])->count();
+
+        $info->article['all'] = Article::find()->where(['is_deleted' => null])->count();
+
+        return $this->render('index', compact('info'));
     }
 
     /**

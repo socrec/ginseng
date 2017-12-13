@@ -222,14 +222,14 @@ class DraftController extends Controller
 
             //delete all old year details
             if (count($ginsengModel->yearlyDetails)) {
-                foreach ($model->yearlyDetails as $yearlyDetail ) {
+                foreach ($ginsengModel->yearlyDetails as $yearlyDetail ) {
                     $yearlyDetail->softDelete();
                 }
             }
             if (count($model->yearlyDetails)) {
                 foreach ($model->yearlyDetails as $draftYear) {
                     $yearlyDetail = cloneModel(YearlyDetail::className(), $draftYear, ['draft_id', 'id']);
-                    $yearlyDetail->ginseng_id = $draftYear->draft_id;
+                    $yearlyDetail->ginseng_id = $model->ginseng_id;
                     $yearlyDetail->save();
                 }
             }
@@ -240,9 +240,18 @@ class DraftController extends Controller
             if (count($model->yearlyDetails)) {
                 foreach ($model->yearlyDetails as $draftYear) {
                     $yearlyDetail = cloneModel(YearlyDetail::className(), $draftYear, ['draft_id', 'id']);
-                    $yearlyDetail->ginseng_id = $draftYear->draft_id;
+                    $yearlyDetail->ginseng_id = $model->ginseng_id;
                     $yearlyDetail->save();
                 }
+            }
+        }
+
+        //copy images
+        if (count($model->images)) {
+            foreach ($model->images as $image) {
+                $image->object_type = App::OBJECT_PANAX;
+                $image->object_id = $ginsengModel->id;
+                $image->save();
             }
         }
         $model->softDelete();

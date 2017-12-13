@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'target' => '_blank'
                         ]);
                     }
-                    return '<span class="not-set">('. Yii::t('app', 'not set') .')</span>';
+                    return '<span class="not-set">('. Yii::t('app', 'Create') .')</span>';
                 },
                 'format' => 'raw'
             ],
