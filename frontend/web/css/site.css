@@ -1,13 +1,17 @@
 html,
 body {
     height: 100%;
+    font-family: 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
+    letter-spacing: 0.4px;
 }
 
 .wrap {
     min-height: 100%;
     height: auto;
-    margin: 0 auto -60px;
+    margin: 0 auto -30px;
     padding: 0 0 60px;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .wrap > .container {
@@ -24,6 +28,7 @@ body {
 .jumbotron {
     text-align: center;
     background-color: transparent;
+    overflow-wrap: break-word;
 }
 
 .jumbotron .btn {
@@ -117,4 +122,36 @@ a.desc:after {
 
 .nav > li > form > button.logout:focus {
     outline: none;
+}
+
+div.wrap::after {
+    content: "";
+    top: 0;
+    position: absolute;
+    z-index: -1;
+    min-width: 100%;
+    min-height: 100%;
+    height: auto;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+div.site-index {
+    background: #fffc;
+    padding: 30px 30px;
+    border-radius: 15px;
+}
+
+.site-index .jumbotron {
+    padding-top: 0px;
+    padding-bottom: 35px;
+}
+
+.select2-selection__placeholder {
+    font-family: 'Open Sans';
+}
+
+.typograph-heading {
+    font-family: 'Roboto';
+    font-weight: 300;
 }
