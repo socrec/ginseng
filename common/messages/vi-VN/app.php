@@ -66,4 +66,5 @@ return [
     'not set' => 'không có',
     'Original' => 'Cây Gốc',
     'Approved successfully.' => 'Duyệt thành công.',
+    'Planted Age' => 'Tuổi Khi Trồng',
 ];

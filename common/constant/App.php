@@ -61,6 +61,8 @@ class App
     const PANAX_STATUS_AVAILABLE = 0;
     const PANAX_STATUS_SOLD = 1;
     const PANAX_STATUS_DEAD = 2;
+    const PANAX_STATUS_SLEPT = 3;
+    const PANAX_STATUS_SICK = 4;
 
     const OBJECT_PANAX = 'panax';
     const OBJECT_DRAFT = 'draft';

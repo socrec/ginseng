@@ -31,30 +31,27 @@ $this->params['breadcrumbs'][] = $this->title;
             <?= Html::a(Yii::t('app', 'Create'), ['draft/create'], ['class' => 'btn btn-success']) ?>
         <?php endif; ?>
     </p>
-    <?php Pjax::begin(); ?>    <?= GridView::widget([
+    <?php Pjax::begin(); ?>
+    <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'code',
-            'origin',
             [
                 'attribute' => 'status',
                 'value' => function ($model) {
                     return $model->statusText;
                 }
             ],
-            'planted_by',
-            'planted_at',
-            'weight',
-            'garden_no',
-            'line_no',
             [
-                'attribute' => 'parent_id',
+                'label' => Yii::t('app', 'age'),
                 'value' => function ($model) {
-                    return $model->parent ? $model->parent->code : null;
+                    return $model->statusText;
                 }
             ],
+            'garden_no',
+            'line_no',
             [
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{view} {update} ' . (Yii::$app->user->can(Auth::PERM_DELETE_GINSENG) ? '{delete}' : ''),

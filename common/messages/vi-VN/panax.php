@@ -10,4 +10,6 @@ return [
     'Available' => 'Chưa Xuất',
     'Sold' => 'Đã Xuất',
     'Dead' => 'Đã Chết',
+    'Slept' => 'Đã Ngủ',
+    'Sick' => 'Bị Bệnh',
 ];

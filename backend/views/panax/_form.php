@@ -26,8 +26,12 @@ use unclead\multipleinput\MultipleInput;
             <?= $form->field($model, 'status')->dropDownList([
                 App::PANAX_STATUS_AVAILABLE => Yii::t('app/panax', 'Available'),
                 App::PANAX_STATUS_SOLD => Yii::t('app/panax', 'Sold'),
+                App::PANAX_STATUS_SLEPT => Yii::t('app/panax', 'Slept'),
+                App::PANAX_STATUS_SICK => Yii::t('app/panax', 'Sick'),
                 App::PANAX_STATUS_DEAD => Yii::t('app/panax', 'Dead'),
             ]) ?>
+
+            <?= $form->field($model, 'planted_age')->textInput(['maxlength' => true]) ?>
 
             <?= $form->field($model, 'planted_by')->textInput(['maxlength' => true]) ?>
 
@@ -88,10 +92,14 @@ use unclead\multipleinput\MultipleInput;
                         'type'  => DatePicker::className(),
                         'title' => $yearlyModel->getAttributeLabel('date_raise'),
                         'options' => [
-                            'options' => ['placeholder' => Yii::t('app', 'Select date...')],
+                            'options' => [
+                                'placeholder' => Yii::t('app', 'Select date...'),
+                                'style' => 'min-width: 100px',
+                            ],
+                            'type' => DatePicker::TYPE_INPUT,
                             'pluginOptions' => [
                                 'format' => 'yyyy-mm-dd',
-                                'todayHighlight' => true
+                                'todayHighlight' => true,
                             ]
                         ]
                     ],
@@ -100,10 +108,14 @@ use unclead\multipleinput\MultipleInput;
                         'type'  => DatePicker::className(),
                         'title' => $yearlyModel->getAttributeLabel('date_sleep'),
                         'options' => [
-                            'options' => ['placeholder' => Yii::t('app', 'Select date...')],
+                            'options' => [
+                                'placeholder' => Yii::t('app', 'Select date...'),
+                                'style' => 'min-width: 100px',
+                            ],
+                            'type' => DatePicker::TYPE_INPUT,
                             'pluginOptions' => [
                                 'format' => 'yyyy-mm-dd',
-                                'todayHighlight' => true
+                                'todayHighlight' => true,
                             ]
                         ]
                     ],
@@ -112,10 +124,14 @@ use unclead\multipleinput\MultipleInput;
                         'type'  => DatePicker::className(),
                         'title' => $yearlyModel->getAttributeLabel('fertilize_date'),
                         'options' => [
-                            'options' => ['placeholder' => Yii::t('app', 'Select date...')],
+                            'options' => [
+                                'placeholder' => Yii::t('app', 'Select date...'),
+                                'style' => 'min-width: 100px',
+                            ],
+                            'type' => DatePicker::TYPE_INPUT,
                             'pluginOptions' => [
                                 'format' => 'yyyy-mm-dd',
-                                'todayHighlight' => true
+                                'todayHighlight' => true,
                             ]
                         ]
                     ],
@@ -124,7 +140,8 @@ use unclead\multipleinput\MultipleInput;
                         'title' => $yearlyModel->getAttributeLabel('fertilize_brand'),
                         'enableError' => true,
                         'options' => [
-                            'class' => 'input-priority'
+                            'class' => 'input-priority',
+                            'style' => 'min-width: 100px',
                         ]
                     ],
                     [
@@ -132,7 +149,8 @@ use unclead\multipleinput\MultipleInput;
                         'title' => $yearlyModel->getAttributeLabel('fertilize_amount'),
                         'enableError' => true,
                         'options' => [
-                            'class' => 'input-priority'
+                            'class' => 'input-priority',
+                            'style' => 'min-width: 100px',
                         ]
                     ],
                 ];
@@ -151,7 +169,7 @@ use unclead\multipleinput\MultipleInput;
     </div>
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton(Yii::t('app', 'Submit'), ['class' => 'btn btn-success']) ?>
     </div>
     <?php ActiveForm::end(); ?>
 </div>

@@ -24,6 +24,7 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  * @property string $code
  * @property string $origin
  * @property integer $status
+ * @property integer $planted_age
  * @property string $planted_by
  * @property string $planted_at
  * @property string $weight
@@ -48,6 +49,7 @@ class Ginseng extends \yii\db\ActiveRecord
     public $fertilize_date;
     public $fertilize_brand;
     public $fertilize_amount;
+    public $parent_code;
 
     /**
      * @inheritdoc
@@ -84,9 +86,9 @@ class Ginseng extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['code', 'weight', 'origin', 'planted_by', 'garden_no', 'line_no'], 'required'],
+            [['code', 'weight', 'origin', 'planted_by', 'garden_no', 'line_no', 'planted_age'], 'required'],
             ['code', 'unique', 'filter' => ['is_deleted' => null]],
-            [['status', 'created_by', 'updated_by'], 'integer'],
+            [['status', 'created_by', 'updated_by', 'planted_age'], 'integer'],
             [['planted_at', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['weight', 'parent_id'], 'number'],
             [['how_to_use', 'notice'], 'string'],
@@ -126,6 +128,7 @@ class Ginseng extends \yii\db\ActiveRecord
             'origin' => Yii::t('app', 'Origin'),
             'status' => Yii::t('app', 'Status'),
             'planted_by' => Yii::t('app', 'Planted By'),
+            'planted_age' => Yii::t('app', 'Planted Age'),
             'planted_at' => Yii::t('app', 'Planted At'),
             'weight' => Yii::t('app', 'Weight (g)'),
             'garden_no' => Yii::t('app', 'Garden No'),

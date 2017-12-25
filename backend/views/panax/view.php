@@ -99,7 +99,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'attribute' => 'status',
                         'value' => $model->getStatusText(),
                     ],
-                    'parent_id',
+                    'parent_code',
                     'planted_by',
                     'planted_at',
                     'weight',

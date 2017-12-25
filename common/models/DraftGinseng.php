@@ -18,6 +18,7 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  * @property string $origin
  * @property string $code
  * @property integer $status
+ * @property integer $planted_age
  * @property string $planted_by
  * @property string $planted_at
  * @property string $weight
@@ -78,8 +79,8 @@ class DraftGinseng extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['code', 'weight', 'origin', 'planted_by', 'garden_no', 'line_no'], 'required'],
-            [['status', 'created_by', 'updated_by'], 'integer'],
+            [['code', 'weight', 'origin', 'planted_by', 'garden_no', 'line_no', 'planted_age'], 'required'],
+            [['status', 'created_by', 'updated_by', 'planted_age'], 'integer'],
             [['planted_at', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['weight', 'parent_id'], 'number'],
             [['how_to_use', 'notice'], 'string'],
@@ -152,6 +153,7 @@ class DraftGinseng extends \yii\db\ActiveRecord
             'origin' => Yii::t('app', 'Origin'),
             'status' => Yii::t('app', 'Status'),
             'planted_by' => Yii::t('app', 'Planted By'),
+            'planted_age' => Yii::t('app', 'Planted Age'),
             'planted_at' => Yii::t('app', 'Planted At'),
             'weight' => Yii::t('app', 'Weight (g)'),
             'garden_no' => Yii::t('app', 'Garden No'),

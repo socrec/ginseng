@@ -23,7 +23,7 @@ use dosamigos\ckeditor\CKEditor;
     <?= $form->field($model, 'imageFile')->label(Yii::t('app', 'Main Image'))->fileInput(['accept' => 'image/*']) ?>
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton(Yii::t('app', 'Submit'), ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

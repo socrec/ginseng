@@ -9,6 +9,8 @@ use yii\widgets\DetailView;
 $this->title = $model->username;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app','User'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
+$role = Yii::$app->authManager->getRolesByUser($model->id);
 ?>
 <div class="user-view">
 
@@ -32,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'email:email',
             [
                 'label' => Yii::t('app', 'Role'),
-                'value' => array_shift(Yii::$app->authManager->getRolesByUser($model->id))->name
+                'value' => array_shift($role)->name
             ],
             'created_at:datetime',
             'updated_at:datetime',

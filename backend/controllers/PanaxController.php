@@ -114,6 +114,7 @@ class PanaxController extends Controller
                 $tmp[$year->id] = $year->year;
             }
         }
+        $model->parent_code = $model->parent->code;
 
         $sickModel = new YearlySick();
         $sickModel->yearList = $tmp;
