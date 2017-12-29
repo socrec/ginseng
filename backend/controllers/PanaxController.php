@@ -114,7 +114,7 @@ class PanaxController extends Controller
                 $tmp[$year->id] = $year->year;
             }
         }
-        $model->parent_code = $model->parent->code;
+        $model->parent_code = $model->parent ? $model->parent->code : null;
 
         $sickModel = new YearlySick();
         $sickModel->yearList = $tmp;
@@ -233,6 +233,7 @@ class PanaxController extends Controller
                     $yearlyModel->fertilize_date = $yearlyDetail['fertilize_date'];
                     $yearlyModel->fertilize_brand = $yearlyDetail['fertilize_brand'];
                     $yearlyModel->fertilize_amount = $yearlyDetail['fertilize_amount'];
+                    $yearlyModel->notice = $yearlyDetail['notice'];
                     $yearlyModel->save();
                 }
             }

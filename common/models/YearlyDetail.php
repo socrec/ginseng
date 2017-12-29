@@ -66,7 +66,7 @@ class YearlyDetail extends \yii\db\ActiveRecord
         return [
             [['year'], 'required'],
             [['ginseng_id', 'year', 'created_by', 'updated_by'], 'integer'],
-            [['date_raise', 'date_sleep', 'fertilize_date', 'fertilize_brand', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
+            [['date_raise', 'date_sleep', 'fertilize_date', 'fertilize_brand', 'created_at', 'updated_at', 'deleted_at', 'notice'], 'safe'],
             [['fertilize_amount'], 'string', 'max' => 250],
             [['imageFiles'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxFiles' => 10],
         ];
@@ -86,6 +86,7 @@ class YearlyDetail extends \yii\db\ActiveRecord
             'fertilize_date' => Yii::t('app', 'Fertilize Date'),
             'fertilize_brand' => Yii::t('app', 'Fertilize Brand'),
             'fertilize_amount' => Yii::t('app', 'Fertilize Amount'),
+            'notice' => Yii::t('app', 'Notice'),
             'imageFiles' => Yii::t('app', 'Image'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
@@ -98,5 +99,10 @@ class YearlyDetail extends \yii\db\ActiveRecord
     public function getSicks()
     {
         return $this->hasMany(YearlySick::className(), ['year_id' => 'id']);
+    }
+
+    public function getUpdatedByUser()
+    {
+        return $this->hasOne(User::className(), ['id' => 'updated_by']);
     }
 }

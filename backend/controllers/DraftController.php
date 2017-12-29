@@ -97,6 +97,7 @@ class DraftController extends Controller
     public function actionCreate()
     {
         $model = new DraftGinseng();
+        $model->scenario = 'create';
         $yearlyModel = new DraftYear();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -145,6 +146,7 @@ class DraftController extends Controller
     {
         $ginsengModel = PanaxController::findModel($id);
         $model = cloneModel(DraftGinseng::className(), $ginsengModel, ['id']);
+        $model->ginseng_id = $id;
 
         $yearlyModel = new DraftYear();
         if ($ginsengModel->id && $ginsengModel->getYearlyDetails()->count()) {
@@ -152,6 +154,7 @@ class DraftController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            dd('ok');
             $model->save();
 
             //upload Image
@@ -192,6 +195,7 @@ class DraftController extends Controller
                     $yearlyModel->fertilize_date = $yearlyDetail['fertilize_date'];
                     $yearlyModel->fertilize_brand = $yearlyDetail['fertilize_brand'];
                     $yearlyModel->fertilize_amount = $yearlyDetail['fertilize_amount'];
+                    $yearlyModel->notice = $yearlyDetail['notice'];
                     $yearlyModel->save();
                 }
             }
@@ -221,16 +225,27 @@ class DraftController extends Controller
             $ginsengModel->save();
 
             //delete all old year details
+            $sicks = [];
             if (count($ginsengModel->yearlyDetails)) {
                 foreach ($ginsengModel->yearlyDetails as $yearlyDetail ) {
+                    $sicks[$yearlyDetail->year] = $yearlyDetail->sicks;
                     $yearlyDetail->softDelete();
                 }
             }
             if (count($model->yearlyDetails)) {
                 foreach ($model->yearlyDetails as $draftYear) {
                     $yearlyDetail = cloneModel(YearlyDetail::className(), $draftYear, ['draft_id', 'id']);
-                    $yearlyDetail->ginseng_id = $model->ginseng_id;
+                    $yearlyDetail->ginseng_id = $ginsengModel->id;
                     $yearlyDetail->save();
+
+                    //update all the sick to new details
+                    if ($sicks[$yearlyDetail->year]) {
+                        foreach ($sicks[$yearlyDetail->year] as $sick) {
+                            $sick->year_id = $yearlyDetail->id;
+                            $sick->save();
+                        }
+                    }
+                    //END update all the sick to new details
                 }
             }
         } else {
@@ -240,7 +255,7 @@ class DraftController extends Controller
             if (count($model->yearlyDetails)) {
                 foreach ($model->yearlyDetails as $draftYear) {
                     $yearlyDetail = cloneModel(YearlyDetail::className(), $draftYear, ['draft_id', 'id']);
-                    $yearlyDetail->ginseng_id = $model->ginseng_id;
+                    $yearlyDetail->ginseng_id = $ginsengModel->id;
                     $yearlyDetail->save();
                 }
             }

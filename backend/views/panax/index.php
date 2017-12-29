@@ -42,14 +42,22 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'status',
                 'value' => function ($model) {
                     return $model->statusText;
-                }
+                },
+                'filter' => [
+                    App::PANAX_STATUS_AVAILABLE => Yii::t('app/panax', 'Available'),
+                    App::PANAX_STATUS_SOLD => Yii::t('app/panax', 'Sold'),
+                    App::PANAX_STATUS_SLEPT => Yii::t('app/panax', 'Slept'),
+                    App::PANAX_STATUS_SICK => Yii::t('app/panax', 'Sick'),
+                    App::PANAX_STATUS_DEAD => Yii::t('app/panax', 'Dead'),
+                ],
             ],
-            [
-                'label' => Yii::t('app', 'age'),
+            array(
+                'attribute' => 'age',
+                'label' => Yii::t('app', 'Age'),
                 'value' => function ($model) {
-                    return $model->statusText;
+                    return $model->currentAge;
                 }
-            ],
+            ),
             'garden_no',
             'line_no',
             [

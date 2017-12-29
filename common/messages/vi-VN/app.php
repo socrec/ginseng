@@ -67,4 +67,5 @@ return [
     'Original' => 'Cây Gốc',
     'Approved successfully.' => 'Duyệt thành công.',
     'Planted Age' => 'Tuổi Khi Trồng',
+    'Age' => 'Tuổi',
 ];

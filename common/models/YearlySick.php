@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\constant\App;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -95,5 +96,10 @@ class YearlySick extends \yii\db\ActiveRecord
     public function getYearlyDetail()
     {
         return $this->hasOne(YearlyDetail::className(), ['id' => 'year_id']);
+    }
+
+    public function getImages()
+    {
+        return $this->hasMany(Image::className(), ['object_id' => 'id'])->where(['object_type' => App::OBJECT_SICK]);
     }
 }

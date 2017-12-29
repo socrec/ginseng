@@ -12,14 +12,16 @@ use common\models\Ginseng;
  */
 class GinsengSearch extends Ginseng
 {
+    public $age;
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id', 'status', 'created_by', 'updated_by'], 'integer'],
-            [['code', 'origin', 'planted_by', 'planted_at', 'garden_no', 'line_no', 'parent_id', 'how_to_use', 'notice', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
+            [['id', 'status', 'created_by', 'updated_by', 'garden_no', 'line_no', 'age'], 'integer'],
+            [['code', 'origin', 'planted_by', 'planted_at', 'parent_id', 'how_to_use', 'notice', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['weight'], 'number'],
         ];
     }
@@ -65,18 +67,14 @@ class GinsengSearch extends Ginseng
             'status' => $this->status,
             'planted_at' => $this->planted_at,
             'weight' => $this->weight,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            'deleted_at' => $this->deleted_at,
-            'created_by' => $this->created_by,
-            'updated_by' => $this->updated_by,
+            'garden_no' => $this->garden_no,
+            'line_no' => $this->line_no,
+            '(YEAR(CURDATE()) - YEAR(planted_at)) + planted_age' => $this->age,
         ]);
 
         $query->andFilterWhere(['like', 'code', $this->code])
             ->andFilterWhere(['like', 'origin', $this->origin])
             ->andFilterWhere(['like', 'planted_by', $this->planted_by])
-            ->andFilterWhere(['like', 'garden_no', $this->garden_no])
-            ->andFilterWhere(['like', 'line_no', $this->line_no])
             ->andFilterWhere(['like', 'parent_id', $this->parent_id])
             ->andFilterWhere(['like', 'how_to_use', $this->how_to_use])
             ->andFilterWhere(['like', 'notice', $this->notice]);

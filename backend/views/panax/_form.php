@@ -153,6 +153,16 @@ use unclead\multipleinput\MultipleInput;
                             'style' => 'min-width: 100px',
                         ]
                     ],
+                    [
+                        'name'  => 'notice',
+                        'type'  => 'textarea',
+                        'title' => $yearlyModel->getAttributeLabel('notice'),
+                        'enableError' => true,
+                        'options' => [
+                            'class' => 'input-priority',
+                            'style' => 'min-width: 100px',
+                        ]
+                    ],
                 ];
                 if ($model->id) {
                     $columns[] = [

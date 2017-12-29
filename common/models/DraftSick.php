@@ -73,16 +73,16 @@ class DraftSick extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'draft_year_id' => 'Draft Year ID',
-            'title' => 'Title',
-            'medicine' => 'Medicine',
-            'result' => 'Result',
-            'desc' => 'Desc',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'deleted_at' => 'Deleted At',
-            'created_by' => 'Created By',
-            'updated_by' => 'Updated By',
+            'year_id' => Yii::t('app', 'Year'),
+            'title' => Yii::t('app', 'Sick Title'),
+            'medicine' => Yii::t('app', 'Medicine'),
+            'result' => Yii::t('app', 'Result'),
+            'desc' => Yii::t('app', 'Desc'),
+            'created_at' => Yii::t('app', 'Created At'),
+            'updated_at' => Yii::t('app', 'Updated At'),
+            'deleted_at' => Yii::t('app', 'Deleted At'),
+            'created_by' => Yii::t('app', 'Created By'),
+            'updated_by' => Yii::t('app', 'Updated By'),
         ];
     }
 }

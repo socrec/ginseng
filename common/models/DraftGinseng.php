@@ -80,13 +80,13 @@ class DraftGinseng extends \yii\db\ActiveRecord
     {
         return [
             [['code', 'weight', 'origin', 'planted_by', 'garden_no', 'line_no', 'planted_age'], 'required'],
-            [['status', 'created_by', 'updated_by', 'planted_age'], 'integer'],
+            [['status', 'created_by', 'updated_by', 'planted_age', 'garden_no', 'line_no'], 'integer'],
             [['planted_at', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['weight', 'parent_id'], 'number'],
             [['how_to_use', 'notice'], 'string'],
             [['code'], 'string', 'max' => 200],
-            ['code', 'unique', 'filter' => ['is_deleted' => null], 'targetClass' => Ginseng::className()],
-            ['code', 'unique', 'filter' => ['is_deleted' => null]],
+            ['code', 'unique', 'filter' => ['is_deleted' => null], 'targetClass' => Ginseng::className(), 'on' => 'create'],
+//            ['code', 'unique', 'filter' => ['is_deleted' => null]],
             [['origin', 'planted_by'], 'string', 'max' => 250],
             [['garden_no', 'line_no'], 'string', 'max' => 5],
             [['imageFiles'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxFiles' => 10],

@@ -95,9 +95,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attributes' => [
                     'code',
                     'origin',
-                    [                                                  // the owner name of the model
+                    [
                         'attribute' => 'status',
                         'value' => $model->getStatusText(),
+                    ],
+                    [
+                        'label' => Yii::t('app', 'Age'),
+                        'value' => $model->currentAge,
                     ],
                     'parent_code',
                     'planted_by',
@@ -107,6 +111,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     'line_no',
                     'how_to_use:ntext',
                     'notice:ntext',
+                    'updated_at',
+                    [
+                        'label' => Yii::t('app', 'Updated By'),
+                        'value' =>  $model->updatedByUser ? $model->updatedByUser->username : null,
+                    ],
                 ],
             ]) ?>
         </div>
@@ -135,6 +144,11 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'fertilize_date',
                                 'fertilize_brand',
                                 'fertilize_amount',
+                                'updated_at',
+                                [
+                                    'label' => Yii::t('app', 'Updated By'),
+                                    'value' =>  $detail->updatedByUser ? $detail->updatedByUser->username : null,
+                                ],
                             ],
                         ]) ?>
                         <div class="sub-section">
@@ -159,6 +173,39 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'medicine',
                                     'result',
                                     'desc:ntext',
+                                    [
+                                        'label' => Yii::t('app', 'Image'),
+                                        'format' => 'raw',
+                                        'value' => function ($model) {
+                                            $html = '<div style="width: 250px;" id="carousel-sick-' . $model->id . '" class="carousel slide" data-ride="carousel">
+                                                        <!-- Indicators -->
+                                                        <ol class="carousel-indicators">';
+                                            foreach ($model->images as $index => $image) {
+                                                $html .= '<li data-target="#carousel-sick-' . $model->id . '" data-slide-to="'.$index.'" '. ($index == 0 ? 'class="active"' : '').'></li>';
+                                            }
+                                            $html .= '</ol>
+                                                        <!-- Wrapper for slides -->
+                                                        <div class="carousel-inner" role="listbox">';
+                                            foreach ($model->images as $index => $image) {
+                                                $html .= '<div class="item '. ($index == 0 ? 'active' : '') .'">
+                                                            <img src="'.\yii\helpers\Url::to($image->path).'">
+                                                        </div>';
+                                            }
+                                            $html .= '</div>
+                                        
+                                                        <!-- Controls -->
+                                                        <a class="left carousel-control" href="#carousel-panax" role="button" data-slide="prev">
+                                                            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                                            <span class="sr-only">Previous</span>
+                                                        </a>
+                                                        <a class="right carousel-control" href="#carousel-panax" role="button" data-slide="next">
+                                                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                                            <span class="sr-only">Next</span>
+                                                        </a>
+                                                    </div>';
+                                            return $html;
+                                        }
+                                    ],
 //                                    ['class' => 'yii\grid\ActionColumn'],
                                 ],
                             ]); ?>
