@@ -80,7 +80,7 @@ class DraftGinseng extends \yii\db\ActiveRecord
     {
         return [
             [['code', 'weight', 'origin', 'planted_by', 'garden_no', 'line_no', 'planted_age'], 'required'],
-            [['status', 'created_by', 'updated_by', 'planted_age', 'garden_no', 'line_no'], 'integer'],
+            [['status', 'created_by', 'updated_by', 'planted_age', 'garden_no'], 'integer'],
             [['planted_at', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['weight', 'parent_id'], 'number'],
             [['how_to_use', 'notice'], 'string'],
