@@ -89,7 +89,7 @@ class Ginseng extends \yii\db\ActiveRecord
         return [
             [['code', 'weight', 'origin', 'planted_by', 'garden_no', 'line_no', 'planted_age'], 'required'],
             ['code', 'unique', 'filter' => ['is_deleted' => null]],
-            [['status', 'created_by', 'updated_by', 'planted_age', 'garden_no'], 'integer'],
+            [['status', 'created_by', 'updated_by', 'planted_age', 'garden_no', 'branch_no'], 'integer'],
             [['planted_at', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['weight', 'parent_id'], 'number'],
             [['how_to_use', 'notice'], 'string'],
@@ -135,6 +135,8 @@ class Ginseng extends \yii\db\ActiveRecord
             'garden_no' => Yii::t('app', 'Garden No'),
             'line_no' => Yii::t('app', 'Line No'),
             'parent_id' => Yii::t('app', 'Parent'),
+            'parent_code' => Yii::t('app', 'Parent Code'),
+            'branch_no' => Yii::t('app', 'Branch Number'),
             'how_to_use' => Yii::t('app', 'How To Use'),
             'notice' => Yii::t('app', 'Notice'),
             'imageFiles' => Yii::t('app', 'Image'),
@@ -174,10 +176,10 @@ class Ginseng extends \yii\db\ActiveRecord
 
     public function getCurrentAge()
     {
-        $today = date("Y-m-d");
-        $diff = date_diff(date_create($this->planted_at), date_create($today));
+        $thisYear = (int)date("Y");
+        $plantedYear = (int)date_create($this->planted_at)->format('Y');
 
-        $currentAge = $diff->format('%y') + $this->planted_age;
+        $currentAge = $thisYear - $plantedYear + $this->planted_age;
 
         return $currentAge;
     }

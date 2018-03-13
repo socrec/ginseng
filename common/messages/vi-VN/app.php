@@ -68,4 +68,6 @@ return [
     'Approved successfully.' => 'Duyệt thành công.',
     'Planted Age' => 'Tuổi Khi Trồng',
     'Age' => 'Tuổi',
+    'Parent Code' => 'Cây Mẹ',
+    'Branch Number' => 'Số Chạc',
 ];

@@ -107,6 +107,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'planted_by',
                     'planted_at',
                     'weight',
+                    'branch_no',
                     'garden_no',
                     'line_no',
                     'how_to_use:ntext',

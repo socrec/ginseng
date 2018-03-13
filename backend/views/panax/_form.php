@@ -61,6 +61,8 @@ use unclead\multipleinput\MultipleInput;
 
             <?= $form->field($model, 'weight')->textInput(['maxlength' => true]) ?>
 
+            <?= $form->field($model, 'branch_no')->textInput(['maxlength' => true]) ?>
+
             <?= $form->field($model, 'garden_no')->textInput(['maxlength' => true]) ?>
 
             <?= $form->field($model, 'line_no')->textInput(['maxlength' => true]) ?>
